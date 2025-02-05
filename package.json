@@ -14,7 +14,7 @@
         "build:prod": "webpack --mode=production --node-env=production",
         "watch": "webpack --watch",
         "start": "webpack serve --mode=development",
-        "initialize": "mkdir -p generated && yes n | cp -i type.template.tsx generated/types.tsx 2>/dev/null",
+        "initialize": "mkdir -p generated && yes n | cp -i type.template.tsx generated/types.tsx 2>/dev/null || true",
         "check-unused": "unimported",
         "prelint": "yarn initialize",
         "pretypecheck": "yarn initialize",
