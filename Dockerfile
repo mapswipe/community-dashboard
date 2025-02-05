@@ -1,6 +1,6 @@
-FROM node:17-buster-slim AS base
+FROM node:17-buster-slim AS dev
 
-MAINTAINER togglecorp info@togglecorp.com
+LABEL maintainer="togglecorp info@togglecorp.com"
 
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
@@ -8,7 +8,7 @@ RUN apt-get update -y \
 
 WORKDIR /code
 
-FROM base AS full-client
+FROM dev AS full-client
 
 COPY ./package.json ./yarn.lock /code/
 RUN yarn install --frozen-lockfile
