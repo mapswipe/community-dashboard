@@ -315,7 +315,6 @@ function UserGroupDashboard(props: Props) {
         setDateRange(newValue ?? defaultDateRange);
     }, [setDateRange]);
 
-    // eslint-disable-next-line max-len
     const totalSwipes = userGroupStats?.communityUserGroupStats?.stats?.totalSwipes ?? 0;
 
     // eslint-disable-next-line max-len

@@ -66,31 +66,36 @@ const CHART_BREAKPOINT = 700;
 
 export type ActualContributorTimeStatType = ContributorTimeStatType & { totalSwipeTime: number };
 const UNKNOWN = '-1';
-const BUILD_AREA = 'BUILD_AREA';
-const FOOTPRINT = 'FOOTPRINT';
-const CHANGE_DETECTION = 'CHANGE_DETECTION';
+const FIND = 'FIND';
+const VALIDATE = 'VALIDATE';
+const COMPARE = 'COMPARE';
 const COMPLETENESS = 'COMPLETENESS';
+const VALIDATE_IMAGE = 'VALIDATE_IMAGE';
 
 const projectTypes: Record<string, { color: string, name: string }> = {
     [UNKNOWN]: {
         color: '#808080',
         name: 'Unknown',
     },
-    [BUILD_AREA]: {
+    [FIND]: {
         color: '#f8a769',
         name: 'Find',
     },
-    [FOOTPRINT]: {
+    [VALIDATE]: {
         color: '#bbcb7d',
         name: 'Validate',
     },
-    [CHANGE_DETECTION]: {
+    [COMPARE]: {
         color: '#79aeeb',
         name: 'Compare',
     },
     [COMPLETENESS]: {
         color: '#fb8072',
         name: 'Completeness',
+    },
+    [VALIDATE_IMAGE]: {
+        color: '#a1b963',
+        name: 'Validate Image',
     },
 };
 
@@ -413,30 +418,30 @@ function StatsBoard(props: Props) {
 
     // Others
 
-    const buildAreaTotalArea = areaSwipedByProjectType?.find(
-        (project) => project.projectType === BUILD_AREA,
+    const findTotalArea = areaSwipedByProjectType?.find(
+        (project) => project.projectType === FIND,
     )?.totalArea;
 
-    const changeDetectionTotalArea = areaSwipedByProjectType?.find(
-        (project) => project.projectType === CHANGE_DETECTION,
+    const compareTotalArea = areaSwipedByProjectType?.find(
+        (project) => project.projectType === COMPARE,
     )?.totalArea;
 
     /*
-    const footprintTotalArea = areaSwipedByProjectType?.find(
-        (project) => project.projectType === FOOTPRINT,
+    const validateTotalArea = areaSwipedByProjectType?.find(
+        (project) => project.projectType === VALIDATE,
     )?.totalArea;
     */
 
-    const buildAreaTotalSwipes = swipeByProjectType?.find(
-        (project) => project.projectType === BUILD_AREA,
+    const findTotalSwipes = swipeByProjectType?.find(
+        (project) => project.projectType === FIND,
     )?.totalSwipes;
 
-    const changeDetectionTotalSwipes = swipeByProjectType?.find(
-        (project) => project.projectType === CHANGE_DETECTION,
+    const compareTotalSwipes = swipeByProjectType?.find(
+        (project) => project.projectType === COMPARE,
     )?.totalSwipes;
 
-    const footPrintTotalSwipes = swipeByProjectType?.find(
-        (project) => project.projectType === FOOTPRINT,
+    const validateTotalSwipes = swipeByProjectType?.find(
+        (project) => project.projectType === VALIDATE,
     )?.totalSwipes;
 
     const organizationColors = scaleOrdinal<string, string | undefined>()
@@ -613,13 +618,13 @@ function StatsBoard(props: Props) {
                             <>
                                 <NumberOutput
                                     className={styles.numberOutput}
-                                    value={buildAreaTotalSwipes}
+                                    value={findTotalSwipes}
                                     normal
                                     invalidText={0}
                                 />
                                 <NumberOutput
                                     className={styles.areaOutput}
-                                    value={buildAreaTotalArea}
+                                    value={findTotalArea}
                                     normal
                                     invalidText=""
                                     unit="Sq. Km."
@@ -644,7 +649,7 @@ function StatsBoard(props: Props) {
                         value={(
                             <NumberOutput
                                 className={styles.numberOutput}
-                                value={footPrintTotalSwipes}
+                                value={validateTotalSwipes}
                                 normal
                                 invalidText={0}
                             />
@@ -668,13 +673,13 @@ function StatsBoard(props: Props) {
                             <>
                                 <NumberOutput
                                     className={styles.numberOutput}
-                                    value={changeDetectionTotalSwipes}
+                                    value={compareTotalSwipes}
                                     normal
                                     invalidText={0}
                                 />
                                 <NumberOutput
                                     className={styles.areaOutput}
-                                    value={changeDetectionTotalArea}
+                                    value={compareTotalArea}
                                     normal
                                     invalidText=""
                                     unit="Sq. Km."
