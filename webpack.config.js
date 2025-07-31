@@ -257,7 +257,7 @@ module.exports = () => {
         {
             devServer: {
                 host: '0.0.0.0',
-                port: 3081,
+                port: 3080,
                 overlay: true,
                 hot: true,
                 liveReload: false,
