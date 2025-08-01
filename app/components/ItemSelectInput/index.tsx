@@ -34,31 +34,51 @@ const LIMIT = 5;
 
 const USERS = gql`
 query UserOptions($search: String, $offset: Int!, $limit: Int!) {
-    users(filters: { search: $search }, pagination: { limit: $limit, offset: $offset }) {
-        items {
+    contributorUsers(
+        filters: {
+            username: {iContains: $search}
+        },
+        pagination: {
+            limit: $limit,
+            offset: $offset
+        }
+    ) {
+        results {
             id
             userId
             username
         }
-        count
-        offset
-        limit
+        pageInfo {
+            limit
+            offset
+        }
+        totalCount
     }
 }
 `;
 
 const USER_GROUPS = gql`
 query UserGroupOptions($search: String, $offset: Int!, $limit: Int!) {
-    userGroups(filters: { search: $search }, pagination: { limit: $limit, offset: $offset }) {
-        items {
+    contributorUserGroups(
+        filters: {
+            name: {iContains: $search}
+        }
+        pagination: {
+            limit: $limit,
+            offset: $offset
+        }
+    ) {
+        results {
             id
             isArchived
-            userGroupId
+            clientId
             name
         }
-        count
-        offset
-        limit
+        totalCount
+        pageInfo {
+            limit
+            offset
+        }
     }
 }
 `;
@@ -178,14 +198,15 @@ function ItemSelectInput<Name extends string>(props: ItemSelectInputProps<Name>)
     );
 
     const loading = userDataLoading || userGroupDataLoading;
-    const count = (userData?.users.count ?? 0) + (userGroupData?.userGroups.count ?? 0);
+    const count = (userData?.contributorUsers.totalCount ?? 0)
+        + (userGroupData?.contributorUserGroups.totalCount ?? 0);
     const usersData = useMemo(
-        () => userData?.users.items,
-        [userData?.users.items],
+        () => userData?.contributorUsers.results,
+        [userData?.contributorUsers.results],
     );
     const userGroupsData = useMemo(
-        () => userGroupData?.userGroups.items,
-        [userGroupData?.userGroups.items],
+        () => userGroupData?.contributorUserGroups.results,
+        [userGroupData?.contributorUserGroups.results],
     );
 
     const data: SearchItemType[] = useMemo(
@@ -196,7 +217,7 @@ function ItemSelectInput<Name extends string>(props: ItemSelectInputProps<Name>)
                 type: 'user' as const,
             })) ?? []),
             ...(userGroupsData?.map((userGroup) => ({
-                id: userGroup.userGroupId,
+                id: userGroup.id,
                 name: userGroup.name ?? 'Unknown',
                 type: 'user-group' as const,
                 isArchived: userGroup.isArchived ?? false,
@@ -231,7 +252,7 @@ function ItemSelectInput<Name extends string>(props: ItemSelectInputProps<Name>)
         () => {
             fetchMoreUser({
                 variables: {
-                    offset: (userData?.users.offset ?? 0) + LIMIT,
+                    offset: (userData?.contributorUsers.pageInfo.offset ?? 0) + LIMIT,
                 },
                 updateQuery: (previousResult, { fetchMoreResult }) => {
                     const oldUsers = previousResult;
@@ -243,10 +264,10 @@ function ItemSelectInput<Name extends string>(props: ItemSelectInputProps<Name>)
 
                     return ({
                         users: {
-                            ...newUsers.users,
-                            items: [
-                                ...oldUsers.users?.items ?? [],
-                                ...newUsers.users?.items ?? [],
+                            ...newUsers.contributorUsers,
+                            results: [
+                                ...oldUsers.contributorUsers?.results ?? [],
+                                ...newUsers.contributorUsers?.results ?? [],
                             ],
                         },
                     });
@@ -254,7 +275,7 @@ function ItemSelectInput<Name extends string>(props: ItemSelectInputProps<Name>)
             });
             fetchMoreUserGroup({
                 variables: {
-                    offset: (userGroupData?.userGroups.offset ?? 0) + LIMIT,
+                    offset: (userGroupData?.contributorUserGroups.pageInfo.offset ?? 0) + LIMIT,
                 },
                 updateQuery: (previousResult, { fetchMoreResult }) => {
                     const oldUserGroups = previousResult;
@@ -266,10 +287,10 @@ function ItemSelectInput<Name extends string>(props: ItemSelectInputProps<Name>)
 
                     return ({
                         userGroups: {
-                            ...newUserGroups.userGroups,
+                            ...newUserGroups.contributorUserGroups,
                             items: [
-                                ...oldUserGroups.userGroups.items ?? [],
-                                ...newUserGroups.userGroups.items ?? [],
+                                ...oldUserGroups.contributorUserGroups.results ?? [],
+                                ...newUserGroups.contributorUserGroups.results ?? [],
                             ],
                         },
                     });
@@ -278,8 +299,8 @@ function ItemSelectInput<Name extends string>(props: ItemSelectInputProps<Name>)
         }, [
             fetchMoreUser,
             fetchMoreUserGroup,
-            userData?.users.offset,
-            userGroupData?.userGroups.offset,
+            userData?.contributorUsers.pageInfo.offset,
+            userGroupData?.contributorUserGroups.pageInfo.offset,
         ],
     );
 

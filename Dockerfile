@@ -1,6 +1,6 @@
 FROM node:20-bookworm AS dev
 
-LABEL maintainer="togglecorp info@togglecorp.com"
+LABEL maintainer="Mapswipe Dev"
 
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \

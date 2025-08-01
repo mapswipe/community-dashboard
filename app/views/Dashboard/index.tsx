@@ -18,46 +18,46 @@ import {
 
 const COMMUNITY_STATS = gql`
     query CommunityStats {
-        communityStatsLatest {
-            id
-            totalContributors
-            totalUserGroups
-            totalSwipes
-        }
         communityStats {
             id
             totalContributors
-            totalUserGroups
             totalSwipes
+            totalUserGroups
+        }
+        communityStatsLatest {
+            id
+            totalContributors
+            totalSwipes
+            totalUserGroups
         }
     }
 `;
 
 const FILTERED_COMMUNITY_STATS = gql`
     query FilteredCommunityStats(
-        $fromDate: DateTime!
-        $toDate: DateTime!
+        $fromDate: Date!
+        $toDate: Date!
     ) {
-        filteredStats(dateRange: { fromDate: $fromDate, toDate: $toDate }) {
-            projectGeoContribution {
+        communityFilteredStats(dateRange: { fromDate: $fromDate, toDate: $toDate }) {
+            swipeByProjectGeo {
                 geojson
                 totalContribution
             }
             areaSwipedByProjectType {
-                totalArea
                 projectType
                 projectTypeDisplay
+                totalArea
             }
             swipeByProjectType {
                 projectType
-                totalSwipes
                 projectTypeDisplay
+                totalSwipes
             }
-            contributorTimeStats {
+            swipeTimeByDate {
                 date
                 totalSwipeTime
             }
-            organizationTypeStats {
+            swipeByOrganizationName {
                 organizationName
                 totalSwipes
             }
@@ -161,14 +161,15 @@ function Dashboard(props: Props) {
                     calendarHeatmapHidden
                     handleDateRangeChange={setDateRangeSafe}
                     // eslint-disable-next-line max-len
-                    contributionTimeStats={filteredCommunityStats?.filteredStats?.contributorTimeStats}
+                    contributionTimeStats={filteredCommunityStats?.communityFilteredStats?.swipeTimeByDate}
                     // eslint-disable-next-line max-len
-                    areaSwipedByProjectType={filteredCommunityStats?.filteredStats?.areaSwipedByProjectType}
+                    areaSwipedByProjectType={filteredCommunityStats?.communityFilteredStats?.areaSwipedByProjectType}
                     // eslint-disable-next-line max-len
-                    organizationTypeStats={filteredCommunityStats?.filteredStats?.organizationTypeStats}
-                    swipeByProjectType={filteredCommunityStats?.filteredStats?.swipeByProjectType}
+                    organizationTypeStats={filteredCommunityStats?.communityFilteredStats?.swipeByOrganizationName}
                     // eslint-disable-next-line max-len
-                    contributions={filteredCommunityStats?.filteredStats?.projectGeoContribution as MapContributionType[] | undefined}
+                    swipeByProjectType={filteredCommunityStats?.communityFilteredStats?.swipeByProjectType}
+                    // eslint-disable-next-line max-len
+                    contributions={filteredCommunityStats?.communityFilteredStats?.swipeByProjectGeo as MapContributionType[] | undefined}
                 />
             )}
         />

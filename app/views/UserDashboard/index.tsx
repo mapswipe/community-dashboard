@@ -1,14 +1,18 @@
 import React, { useMemo } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { encodeDate, isDefined, isFalsyString } from '@togglecorp/fujs';
-import { useParams, generatePath, Link } from 'react-router-dom';
+import {
+    useParams,
+    // generatePath,
+    // Link,
+} from 'react-router-dom';
 
 import useUrlState from '#hooks/useUrlState';
-import routes from '#base/configs/routes';
+// import routes from '#base/configs/routes';
 import { MapContributionType } from '#components/ContributionHeatMap';
-import InformationCard from '#components/InformationCard';
-import Heading from '#components/Heading';
-import Pager from '#components/Pager';
+// import InformationCard from '#components/InformationCard';
+// import Heading from '#components/Heading';
+// import Pager from '#components/Pager';
 import Page from '#components/Page';
 import {
     UserStatsQuery,
@@ -16,30 +20,21 @@ import {
     FilteredUserStatsQuery,
     FilteredUserStatsQueryVariables,
 } from '#generated/types';
-import groupSvg from '#resources/icons/group.svg';
+// import groupSvg from '#resources/icons/group.svg';
 import StatsBoard from '#views/StatsBoard';
 import { getThisYear } from '#components/DateRangeInput/predefinedDateRange';
-import { defaultPagePerItemOptions } from '#utils/common';
+// import { defaultPagePerItemOptions } from '#utils/common';
 
-import styles from './styles.css';
+// import styles from './styles.css';
 
 const USER_STATS = gql`
-    query UserStats($pk: ID!, $limit: Int!, $offset: Int!) {
-        user(pk: $pk) {
+    query UserStats($pk: ID!) {
+        contributorUser(id: $pk) {
             id
             userId
             username
-            userInUserGroups(pagination: {limit: $limit, offset: $offset}) {
-                count
-                items {
-                    id
-                    userGroupId
-                    userGroupName
-                    membersCount
-                }
-            }
         }
-        userStats(userId: $pk) {
+        communityUserStats(userUserId: $pk) {
             id
             stats {
                 totalSwipes
@@ -55,17 +50,17 @@ const USER_STATS = gql`
 `;
 
 const FILTERED_USER_STATS = gql`
-    query FilteredUserStats($pk: ID!, $fromDate: DateTime!, $toDate: DateTime!) {
-        userStats(userId: $pk) {
+    query FilteredUserStats($pk: ID!, $fromDate: Date!, $toDate: Date!) {
+        communityUserStats(userUserId: $pk) {
             id
-            filteredStats(dateRange: { fromDate: $fromDate, toDate: $toDate}) {
+            filteredStats(dateRange: {fromDate: $fromDate, toDate: $toDate}) {
                 id
                 areaSwipedByProjectType {
                     totalArea
                     projectType
                     projectTypeDisplay
                 }
-                contributionByGeo {
+                swipeByProjectGeo {
                     geojson
                     totalContribution
                 }
@@ -130,8 +125,8 @@ function UserDashboard(props: Props) {
         }),
     );
 
-    const [activePage, setActivePage] = React.useState(1);
-    const [pagePerItem, setPagePerItem] = React.useState(10);
+    // const [activePage, setActivePage] = React.useState(1);
+    // const [pagePerItem, setPagePerItem] = React.useState(10);
 
     const {
         data: userStats,
@@ -141,8 +136,8 @@ function UserDashboard(props: Props) {
         {
             variables: userId ? {
                 pk: userId,
-                limit: pagePerItem,
-                offset: (activePage - 1) * pagePerItem,
+                // limit: pagePerItem,
+                // offset: (activePage - 1) * pagePerItem,
             } : undefined,
             skip: !userId,
         },
@@ -167,26 +162,28 @@ function UserDashboard(props: Props) {
         setDateRange(newValue ?? defaultDateRange);
     }, [setDateRange]);
 
-    const totalSwipes = userStats?.userStats?.stats?.totalSwipes;
-    const totalSwipesLastMonth = userStats?.userStats?.statsLatest?.totalSwipes;
+    const totalSwipes = userStats?.communityUserStats?.stats?.totalSwipes;
+    const totalSwipesLastMonth = userStats?.communityUserStats?.statsLatest?.totalSwipes;
 
-    const totalSwipeTime = userStats?.userStats?.stats?.totalSwipeTime;
-    const totalSwipeTimeLastMonth = userStats?.userStats?.statsLatest?.totalSwipeTime;
+    const totalSwipeTime = userStats?.communityUserStats?.stats?.totalSwipeTime;
+    const totalSwipeTimeLastMonth = userStats?.communityUserStats?.statsLatest?.totalSwipeTime;
 
-    const totalUserGroup = userStats?.user?.userInUserGroups?.count ?? 0;
-    const totalUserGroupLastMonth = userStats?.userStats?.statsLatest?.totalUserGroups;
+    // TODO: Hardcoding this for now
+    // const totalUserGroup = userStats?.user?.userInUserGroups?.count ?? 0;
+    const totalUserGroup = 0;
+    const totalUserGroupLastMonth = userStats?.communityUserStats?.statsLatest?.totalUserGroups;
 
-    const userGroupsLength = userStats?.user?.userInUserGroups?.items?.length ?? 0;
-    const excessUserGroups = Array.from(new Array((3 - ((userGroupsLength) % 3)) % 3).keys());
+    // const userGroupsLength = userStats?.user?.userInUserGroups?.items?.length ?? 0;
+    // const excessUserGroups = Array.from(new Array((3 - ((userGroupsLength) % 3)) % 3).keys());
 
-    const filteredStats = filteredUserStats?.userStats?.filteredStats;
+    const filteredStats = filteredUserStats?.communityUserStats?.filteredStats;
 
     // NOTE: OSM user does not have username stored
     const userName = useMemo(() => {
-        if (isDefined(userStats) && isDefined(userStats.user)) {
-            return isFalsyString(userStats.user.username)
-                ? userStats.user.userId
-                : userStats.user.username;
+        if (isDefined(userStats) && isDefined(userStats.contributorUser)) {
+            return isFalsyString(userStats.contributorUser.username)
+                ? userStats.contributorUser.userId
+                : userStats.contributorUser.username;
         }
 
         return null;
@@ -215,9 +212,10 @@ function UserDashboard(props: Props) {
                     organizationTypeStats={filteredStats?.swipeByOrganizationName}
                     swipeByProjectType={filteredStats?.swipeByProjectType}
                     // eslint-disable-next-line max-len
-                    contributions={filteredStats?.contributionByGeo as MapContributionType[] | undefined}
+                    contributions={filteredStats?.swipeByProjectGeo as MapContributionType[] | undefined}
                 />
             )}
+            /*
             additionalContent={totalUserGroup > 0 && (
                 <div className={styles.groups}>
                     <Heading size="extraLarge">
@@ -249,7 +247,12 @@ function UserDashboard(props: Props) {
                                         {group.userGroupName}
                                     </Link>
                                 )}
-                                description={`${group.membersCount} ${group.membersCount > 1 ? 'members' : 'member'}`}
+                                description={
+                                    `${group.membersCount} ${group.membersCount > 1
+                                        ? 'members'
+                                        : 'member'
+                                    }`
+                                }
                             />
                         ))}
                         {excessUserGroups.map(
@@ -266,6 +269,7 @@ function UserDashboard(props: Props) {
                     />
                 </div>
             )}
+            */
         />
     );
 }
