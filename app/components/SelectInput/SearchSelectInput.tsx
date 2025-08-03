@@ -238,7 +238,7 @@ function SearchSelectInput<
                 children: labelSelector(option),
                 containerClassName: _cs(styles.option, isActive && styles.active),
                 title: labelSelector(option),
-            };
+            } as P;
         },
         [value, labelSelector],
     );

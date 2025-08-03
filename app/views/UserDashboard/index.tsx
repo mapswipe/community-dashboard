@@ -3,16 +3,16 @@ import { gql, useQuery } from '@apollo/client';
 import { encodeDate, isDefined, isFalsyString } from '@togglecorp/fujs';
 import {
     useParams,
-    // generatePath,
-    // Link,
+    generatePath,
+    Link,
 } from 'react-router-dom';
 
 import useUrlState from '#hooks/useUrlState';
-// import routes from '#base/configs/routes';
+import routes from '#base/configs/routes';
 import { MapContributionType } from '#components/ContributionHeatMap';
-// import InformationCard from '#components/InformationCard';
-// import Heading from '#components/Heading';
-// import Pager from '#components/Pager';
+import InformationCard from '#components/InformationCard';
+import Heading from '#components/Heading';
+import Pager from '#components/Pager';
 import Page from '#components/Page';
 import {
     UserStatsQuery,
@@ -20,15 +20,15 @@ import {
     FilteredUserStatsQuery,
     FilteredUserStatsQueryVariables,
 } from '#generated/types';
-// import groupSvg from '#resources/icons/group.svg';
+import groupSvg from '#resources/icons/group.svg';
 import StatsBoard from '#views/StatsBoard';
 import { getThisYear } from '#components/DateRangeInput/predefinedDateRange';
-// import { defaultPagePerItemOptions } from '#utils/common';
+import { defaultPagePerItemOptions } from '#utils/common';
 
-// import styles from './styles.css';
+import styles from './styles.css';
 
 const USER_STATS = gql`
-    query UserStats($pk: ID!) {
+    query UserStats($pk: ID!, $limit: Int!, $offset: Int!) {
         contributorUser(id: $pk) {
             id
             userId
@@ -45,6 +45,17 @@ const USER_STATS = gql`
                 totalSwipeTime
                 totalUserGroups
             }
+        }
+        contributorUserGroups(
+            pagination: {limit: $limit, offset: $offset}
+            filters: {userUserId: $pk}
+        ) {
+            results {
+                id
+                name
+                membersCount
+            }
+            totalCount
         }
     }
 `;
@@ -125,8 +136,8 @@ function UserDashboard(props: Props) {
         }),
     );
 
-    // const [activePage, setActivePage] = React.useState(1);
-    // const [pagePerItem, setPagePerItem] = React.useState(10);
+    const [activePage, setActivePage] = React.useState(1);
+    const [pagePerItem, setPagePerItem] = React.useState(10);
 
     const {
         data: userStats,
@@ -136,8 +147,8 @@ function UserDashboard(props: Props) {
         {
             variables: userId ? {
                 pk: userId,
-                // limit: pagePerItem,
-                // offset: (activePage - 1) * pagePerItem,
+                limit: pagePerItem,
+                offset: (activePage - 1) * pagePerItem,
             } : undefined,
             skip: !userId,
         },
@@ -168,13 +179,11 @@ function UserDashboard(props: Props) {
     const totalSwipeTime = userStats?.communityUserStats?.stats?.totalSwipeTime;
     const totalSwipeTimeLastMonth = userStats?.communityUserStats?.statsLatest?.totalSwipeTime;
 
-    // TODO: Hardcoding this for now
-    // const totalUserGroup = userStats?.user?.userInUserGroups?.count ?? 0;
-    const totalUserGroup = 0;
+    const totalUserGroup = userStats?.contributorUserGroups?.totalCount ?? 0;
     const totalUserGroupLastMonth = userStats?.communityUserStats?.statsLatest?.totalUserGroups;
 
-    // const userGroupsLength = userStats?.user?.userInUserGroups?.items?.length ?? 0;
-    // const excessUserGroups = Array.from(new Array((3 - ((userGroupsLength) % 3)) % 3).keys());
+    const userGroupsLength = userStats?.contributorUserGroups?.results?.length ?? 0;
+    const excessUserGroups = Array.from(new Array((3 - ((userGroupsLength) % 3)) % 3).keys());
 
     const filteredStats = filteredUserStats?.communityUserStats?.filteredStats;
 
@@ -215,16 +224,15 @@ function UserDashboard(props: Props) {
                     contributions={filteredStats?.swipeByProjectGeo as MapContributionType[] | undefined}
                 />
             )}
-            /*
             additionalContent={totalUserGroup > 0 && (
                 <div className={styles.groups}>
                     <Heading size="extraLarge">
                         Current Groups
                     </Heading>
                     <div className={styles.groupsContainer}>
-                        {userStats?.user?.userInUserGroups?.items?.map((group) => (
+                        {userStats?.contributorUserGroups?.results?.map((group) => (
                             <InformationCard
-                                key={group.userGroupId}
+                                key={group.id}
                                 className={styles.group}
                                 icon={(<img src={groupSvg} alt="swipe icon" />)}
                                 // subHeading={(
@@ -241,10 +249,10 @@ function UserDashboard(props: Props) {
                                         className={styles.link}
                                         to={generatePath(
                                             routes.userGroupDashboard.path,
-                                            { userGroupId: group.userGroupId },
+                                            { userGroupId: group.id },
                                         )}
                                     >
-                                        {group.userGroupName}
+                                        {group.name}
                                     </Link>
                                 )}
                                 description={
@@ -269,7 +277,6 @@ function UserDashboard(props: Props) {
                     />
                 </div>
             )}
-            */
         />
     );
 }

@@ -263,7 +263,7 @@ function ItemSelectInput<Name extends string>(props: ItemSelectInputProps<Name>)
                     }
 
                     return ({
-                        users: {
+                        contributorUsers: {
                             ...newUsers.contributorUsers,
                             results: [
                                 ...oldUsers.contributorUsers?.results ?? [],
@@ -286,9 +286,9 @@ function ItemSelectInput<Name extends string>(props: ItemSelectInputProps<Name>)
                     }
 
                     return ({
-                        userGroups: {
+                        contributorUserGroups: {
                             ...newUserGroups.contributorUserGroups,
-                            items: [
+                            results: [
                                 ...oldUserGroups.contributorUserGroups.results ?? [],
                                 ...newUserGroups.contributorUserGroups.results ?? [],
                             ],
