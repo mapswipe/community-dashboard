@@ -45,7 +45,7 @@ query UserOptions($search: String, $offset: Int!, $limit: Int!) {
     ) {
         results {
             id
-            userId
+            firebaseId
             username
         }
         pageInfo {
@@ -212,8 +212,8 @@ function ItemSelectInput<Name extends string>(props: ItemSelectInputProps<Name>)
     const data: SearchItemType[] = useMemo(
         () => ([
             ...(usersData?.map((user) => ({
-                id: user.userId,
-                name: (isFalsyString(user.username) ? user.userId : user.username),
+                id: user.firebaseId,
+                name: (isFalsyString(user.username) ? user.firebaseId : user.username),
                 type: 'user' as const,
             })) ?? []),
             ...(userGroupsData?.map((userGroup) => ({
