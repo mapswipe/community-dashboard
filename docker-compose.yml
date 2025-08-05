@@ -1,6 +1,6 @@
 services:
   react:
-    command: sh -c 'env && yarn install --frozen-lockfile && yarn start'
+    command: sh -c 'yarn install --frozen-lockfile && yarn start'
     build:
       context: ../
       target: dev

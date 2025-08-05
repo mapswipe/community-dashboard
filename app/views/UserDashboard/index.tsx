@@ -31,10 +31,10 @@ const USER_STATS = gql`
     query UserStats($pk: ID!, $limit: Int!, $offset: Int!) {
         contributorUser(id: $pk) {
             id
-            userId
+            firebaseId
             username
         }
-        communityUserStats(userUserId: $pk) {
+        communityUserStats(firebaseId: $pk) {
             id
             stats {
                 totalSwipes
@@ -48,7 +48,7 @@ const USER_STATS = gql`
         }
         contributorUserGroups(
             pagination: {limit: $limit, offset: $offset}
-            filters: {userUserId: $pk}
+            filters: {firebaseId: $pk}
         ) {
             results {
                 id
@@ -62,7 +62,7 @@ const USER_STATS = gql`
 
 const FILTERED_USER_STATS = gql`
     query FilteredUserStats($pk: ID!, $fromDate: Date!, $toDate: Date!) {
-        communityUserStats(userUserId: $pk) {
+        communityUserStats(firebaseId: $pk) {
             id
             filteredStats(dateRange: {fromDate: $fromDate, toDate: $toDate}) {
                 id
@@ -191,7 +191,7 @@ function UserDashboard(props: Props) {
     const userName = useMemo(() => {
         if (isDefined(userStats) && isDefined(userStats.contributorUser)) {
             return isFalsyString(userStats.contributorUser.username)
-                ? userStats.contributorUser.userId
+                ? userStats.contributorUser.firebaseId
                 : userStats.contributorUser.username;
         }
 

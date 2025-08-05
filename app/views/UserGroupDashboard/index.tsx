@@ -46,7 +46,7 @@ query UserGroupStats($pk: ID!, $limit: Int!, $offset: Int!) {
                 totalMappingProjects
                 user {
                     id
-                    userId
+                    firebaseId
                     username
                 }
             }
@@ -125,7 +125,7 @@ const USER_MEMBERSHIPS_EXPORT = gql`
                     totalMappingProjects
                     user {
                         id
-                        userId
+                        firebaseId
                         username
                     }
                 }
@@ -137,7 +137,7 @@ const USER_MEMBERSHIPS_EXPORT = gql`
 type UserGroupMember = NonNullable<NonNullable<NonNullable<UserGroupStatsQuery['contributorUserGroup']>['userMemberships']>['results']>[number];
 
 function memberKeySelector(member: UserGroupMember) {
-    return member.user.userId;
+    return member.user.firebaseId;
 }
 
 interface DateRangeValue {
@@ -241,7 +241,7 @@ function UserGroupDashboard(props: Props) {
                         ...(newUserMembershipsData?.map((user) => (
                             [
                                 // eslint-disable-next-line max-len
-                                isFalsyString(user.user.username) ? user.user.userId : user.user.username,
+                                isFalsyString(user.user.username) ? user.user.firebaseId : user.user.username,
                                 user.totalSwipes,
                                 user.totalMappingProjects,
                                 user.totalSwipeTime,
@@ -306,7 +306,7 @@ function UserGroupDashboard(props: Props) {
                 totalSwipes: item.totalSwipes,
                 isActive: item.isActive,
                 username: item.user.username,
-                userId: item.user.userId,
+                userId: item.user.firebaseId,
             },
         }
     ), []);
