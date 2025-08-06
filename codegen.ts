@@ -1,37 +1,22 @@
+import 'dotenv/config';
+
 import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-    schema: process.env.GRAPHQL_CODEGEN_ENDPOINT,
+    schema: process.env.APP_GRAPHQL_CODEGEN_ENDPOINT,
     documents: [
-        'app/**/*.tsx',
-        'app/**/*.ts'
+        'src/**/*.tsx',
+        'src/**/*.ts',
     ],
     ignoreNoDocuments: true, // for better experience with the watcher
     generates: {
-        './generated/types/graphql.ts': {
-            plugins: [
-                'typescript',
-                'typescript-operations',
-                'typescript-urql',
-            ],
-            config: {
-                withComponent: false,
-                withHooks: true,
-                purgeMagicComment: true,
-                gqlImport: 'urql#gql',
-                dedupeFragments: true,
-                skipTypename: true,
-
-                // FIXME: Enable this later
-                // enumsAsTypes: true,
-            },
+        './generated/types/': {
+            preset: 'client',
         },
-        './generated/schema.json': {
-            plugins: [
-                'introspection'
-            ],
-        }
-    }
-}
+    },
+    config: {
+        enumsAsTypes: true,
+    },
+};
 
 export default config;

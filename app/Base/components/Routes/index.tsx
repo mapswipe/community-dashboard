@@ -1,17 +1,20 @@
 import { Suspense } from 'react';
 import {
     Route,
-    Switch,
-} from 'react-router-dom';
+    Routes,
+} from 'react-router';
+import { withSentryReactRouterV7Routing } from '@sentry/react';
 
 import PreloadMessage from '#base/components/PreloadMessage';
 import routes from '#base/configs/routes';
+
+const RoutesWithSentry = withSentryReactRouterV7Routing(Routes);
 
 interface Props {
     className?: string;
 }
 
-function Routes(props: Props) {
+function AppRoutes(props: Props) {
     const { className } = props;
 
     return (
@@ -23,33 +26,25 @@ function Routes(props: Props) {
                 />
             )}
         >
-            <Switch>
+            <RoutesWithSentry>
                 <Route
-                    exact
                     path={routes.home.path}
-                >
-                    {routes.home.load({ className })}
-                </Route>
+                    element={routes.home.load({ className })}
+                />
                 <Route
-                    exact
                     path={routes.userGroupDashboard.path}
-                >
-                    {routes.userGroupDashboard.load({ className })}
-                </Route>
+                    element={routes.userGroupDashboard.load({ className })}
+                />
                 <Route
-                    exact
                     path={routes.userDashboard.path}
-                >
-                    {routes.userDashboard.load({ className })}
-                </Route>
+                    element={routes.userDashboard.load({ className })}
+                />
                 <Route
-                    exact
                     path={routes.fourHundredFour.path}
-                >
-                    {routes.fourHundredFour.load({ className })}
-                </Route>
-            </Switch>
+                    element={routes.fourHundredFour.load({ className })}
+                />
+            </RoutesWithSentry>
         </Suspense>
     );
 }
-export default Routes;
+export default AppRoutes;

@@ -2,7 +2,7 @@ import React from 'react';
 import {
     NavLink,
     NavLinkProps,
-} from 'react-router-dom';
+} from 'react-router';
 import { _cs } from '@togglecorp/fujs';
 
 import useRouteMatching, {
@@ -17,6 +17,7 @@ export type Props = Omit<NavLinkProps, 'to'> & {
     attrs?: Attrs;
     children?: React.ReactNode;
     className?: string;
+    activeClassName?: string;
 };
 
 function SmartNavLink(props: Props) {
@@ -39,8 +40,12 @@ function SmartNavLink(props: Props) {
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...otherProps}
             to={routeData.to}
-            className={_cs(styles.smartNavLink, className)}
-            activeClassName={_cs(styles.active, activeClassName)}
+            className={({ isActive }) => _cs(
+                styles.smartNavLink,
+                isActive && styles.active,
+                className,
+                isActive && activeClassName,
+            )}
         >
             {children ?? routeData.children}
         </NavLink>

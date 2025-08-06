@@ -11,7 +11,7 @@ RUN apt-get update -y \
 
 WORKDIR /code
 
-# -------------------------- Nginx - Builder --------------------------------
+# -------------------------- web-app-serve- Builder --------------------------------
 
 FROM dev AS web-app-serve-build
 
@@ -23,10 +23,25 @@ COPY . /code/
 
 # Build variables (Requires backend pulled)
 
-ENV GRAPHQL_CODEGEN_ENDPOINT=./backend/schema.graphql
+ENV APP_GRAPHQL_CODEGEN_ENDPOINT=./backend/schema.graphql
+ENV APP_GRAPHQL_ENDPOINT=http://localhost:8000/graphql/
 ENV APP_TITLE="Mapswipe Community Dashboard"
 ENV APP_ENVIRONMENT=development
 ENV APP_MAPSWIPE_WEBSITE=https://mapswipe.org
-ENV APP_SENTRY_DSN=https://mapswipe.org
+ENV APP_SENTRY_DSN=temp
+ENV APP_SENTRY_TRACES_SAMPLE_RATE=temp
 
-RUN pnpm generate:type && pnpm build
+RUN pnpm generate:type && WEB_APP_SERVE_ENABLED=true pnpm build
+
+# ---------------------------------------------------------------------
+# Final image using web-app-serve
+
+FROM ghcr.io/toggle-corp/web-app-serve:v0.1.2 AS web-app-serve
+
+LABEL org.opencontainers.image.source="https://github.com/my-org/my-best-dashboard"
+LABEL org.opencontainers.image.authors="my-email@company.com"
+
+# Env for apply-config script
+ENV APPLY_CONFIG__SOURCE_DIRECTORY=/code/build/
+
+COPY --from=web-app-serve-build /code/build "$APPLY_CONFIG__SOURCE_DIRECTORY"

@@ -3,7 +3,6 @@ import React, {
     useMemo,
     useState,
 } from 'react';
-// import { useLocation } from 'react-router-dom';
 import {
     IoCheckmark,
     IoPeople,

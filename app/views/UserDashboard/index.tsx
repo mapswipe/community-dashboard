@@ -3,7 +3,7 @@ import {
     generatePath,
     Link,
     useParams,
-} from 'react-router-dom';
+} from 'react-router';
 import {
     gql,
     useQuery,

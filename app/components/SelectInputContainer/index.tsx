@@ -179,11 +179,11 @@ function SelectInputContainer<
     );
 
     const handleSearchInputChange = useCallback(
-        (value) => {
+        (value: string | undefined) => {
             if (!dropdownShown) {
                 onDropdownShownChange(true);
             }
-            onSearchTextChange(value);
+            onSearchTextChange(value ?? '');
         },
         [
             dropdownShown,
@@ -254,7 +254,7 @@ function SelectInputContainer<
     );
 
     const optionListRendererParams = useCallback(
-        (key, option) => ({
+        (key: OK, option: O) => ({
             contentRendererParam: optionRendererParams,
             option,
             optionKey: key,

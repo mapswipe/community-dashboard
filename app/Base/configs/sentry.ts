@@ -1,12 +1,16 @@
-import { matchPath } from 'react-router-dom';
+import { useEffect } from 'react';
+import {
+    createRoutesFromChildren,
+    matchRoutes,
+    useLocation,
+    useNavigationType,
+} from 'react-router';
 import {
     BrowserOptions,
-    reactRouterV5Instrumentation,
+    reactRouterV7BrowserTracingIntegration,
 } from '@sentry/react';
-import { Integrations } from '@sentry/tracing';
 
-import browserHistory from '#base/configs/history';
-import routes from '#base/configs/routes';
+// import { Integrations } from '@sentry/tracing';
 
 const appName = import.meta.env.MY_APP_ID;
 
@@ -21,16 +25,15 @@ const sentryConfig: BrowserOptions | undefined = sentryDsn ? {
     dsn: sentryDsn,
     release: appName,
     environment: env,
-    // sendDefaultPii: true,
     tracesSampleRate,
     normalizeDepth: 5,
     integrations: [
-        new Integrations.BrowserTracing({
-            routingInstrumentation: reactRouterV5Instrumentation(
-                browserHistory,
-                Object.entries(routes),
-                matchPath,
-            ),
+        reactRouterV7BrowserTracingIntegration({
+            useEffect,
+            useLocation,
+            useNavigationType,
+            createRoutesFromChildren,
+            matchRoutes,
         }),
     ],
 } : undefined;

@@ -1,5 +1,12 @@
-import { useEffect } from 'react';
-import CalendarHeatmap from 'react-calendar-heatmap';
+import {
+    useCallback,
+    useEffect,
+    useMemo,
+} from 'react';
+import CalendarHeatmap, {
+    type ReactCalendarHeatmapValue,
+    type TooltipDataAttrs,
+} from 'react-calendar-heatmap';
 import ReactTooltip from 'react-tooltip';
 import {
     compareDate,
@@ -16,7 +23,7 @@ import styles from './styles.module.css';
 const githubColors = [' #eeeeee', '#d6e685', '#8cc665', '#44a340', '#1e6823'];
 const githubColorsClass = ['color-github-0', 'color-github-1', 'color-github-2', 'color-github-3', 'color-github-4'];
 
-function getDateRange(data: Data[] | null | undefined) {
+function getDateRange(data: ReactCalendarHeatmapValue<string>[] | null | undefined) {
     if (!data || data.length === 0) {
         const currentDate = new Date();
         return {
@@ -50,13 +57,8 @@ function getDateRange(data: Data[] | null | undefined) {
     };
 }
 
-export interface Data {
-    date: string;
-    count: number;
-}
-
 interface Props {
-    data: Data[] | undefined | null;
+    data: ReactCalendarHeatmapValue<string>[] | undefined | null;
 }
 
 function CalendarHeatMapContainer(props: Props) {
@@ -64,27 +66,29 @@ function CalendarHeatMapContainer(props: Props) {
         data,
     } = props;
 
-    // FIXME: memoize this
-    const range = getDateRange(data);
+    const range = useMemo(() => (getDateRange(data)), [data]);
 
     useEffect(() => {
         ReactTooltip.rebuild();
     });
 
-    // FIXME: use useMemo
     // NOTE: 5 is taken as a base minimum values as we bin the contribution into five bings
-    const maxContributionValue = Math.max(5, ...(data?.map((d) => d.count) ?? []));
-    const contributionColors = scaleQuantile<string>()
-        .domain([0, maxContributionValue])
-        .range(githubColorsClass.slice(1));
+    const maxContributionValue = useMemo(() => (
+        Math.max(5, ...(data?.map((d) => d.count) ?? []))
+    ), [data]);
 
-    // FIXME: use useCallback
-    const getClassForValue = (value: Data | undefined) => {
+    const contributionColors = useMemo(() => (
+        scaleQuantile<string>()
+            .domain([0, maxContributionValue])
+            .range(githubColorsClass.slice(1))
+    ), [maxContributionValue]);
+
+    const getClassForValue = useCallback((value: ReactCalendarHeatmapValue<string> | undefined) => {
         if (value) {
             return contributionColors(value.count);
         }
         return 'color-empty';
-    };
+    }, [contributionColors]);
 
     return (
         <InformationCard
@@ -97,13 +101,15 @@ function CalendarHeatMapContainer(props: Props) {
                 <CalendarHeatmap
                     startDate={range.startDate}
                     endDate={range.endDate}
-                    values={data ?? []}
+                    values={(data ?? []) as ReactCalendarHeatmapValue<string>[]}
                     classForValue={getClassForValue}
-                    tooltipDataAttrs={(value: { date?: string, count?: string }) => {
-                        if (value?.count && value?.date) {
-                            return { 'data-tip': `${value?.count} swipes on ${value?.date}` };
+                    // FIXME: This is a hack. Identify this type issue later
+                    tooltipDataAttrs={(value) => {
+                        const val = value as { date?: string, count?: string };
+                        if (val?.count && val?.date) {
+                            return { 'data-tip': `${val?.count} swipes on ${val?.date}` } as TooltipDataAttrs;
                         }
-                        return undefined;
+                        return {};
                     }}
                     showWeekdayLabels
                     showMonthLabels

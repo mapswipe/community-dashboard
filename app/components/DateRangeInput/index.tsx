@@ -196,7 +196,7 @@ function DateRangeInput<N extends NameType>(props: Props<N>) {
     }), [tempDate.startDate, value]);
 
     const handleCalendarDateClick: CalendarProps<CalendarDateProps>['onDateClick'] = React.useCallback(
-        (year, month, day) => {
+        (year: number, month: number, day: number) => {
             setTempDate((prevTempDate) => {
                 if (isDefined(prevTempDate.startDate)) {
                     const lastDate = ymdToDateString(year, month, day);

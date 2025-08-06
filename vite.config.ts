@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import path from 'path';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import webfontDownload from 'vite-plugin-webfont-dl';
 import reactSwc from '@vitejs/plugin-react-swc';

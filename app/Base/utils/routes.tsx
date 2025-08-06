@@ -7,8 +7,14 @@ export function joinUrlPart(foo: string, bar: string) {
     return foo + bar;
 }
 
-export function wrap<T extends string, K extends { className?: string }>(
-    props: Omit<PageProps<K>, 'overrideProps' | 'path'> & { path: T, parent?: { path: string } },
+interface BaseProps {
+    className?: string;
+}
+
+type Props<T extends string, K extends BaseProps> = Omit<PageProps<K>, 'overrideProps' | 'path'> & { path: T, parent?: { path: string } };
+
+export function wrap<T extends string, K extends BaseProps>(
+    props: Props<T, K>,
 ) {
     const {
         path,
@@ -31,6 +37,7 @@ export function wrap<T extends string, K extends { className?: string }>(
                 component={component}
                 componentProps={componentProps}
                 overrideProps={overrideProps}
+                // defaultPage="/projects/"
                 // eslint-disable-next-line react/jsx-props-no-spreading
                 {...otherProps}
             />

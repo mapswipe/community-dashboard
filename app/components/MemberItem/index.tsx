@@ -1,7 +1,7 @@
 import {
     generatePath,
     Link,
-} from 'react-router-dom';
+} from 'react-router';
 import {
     isDefined,
     isFalsyString,

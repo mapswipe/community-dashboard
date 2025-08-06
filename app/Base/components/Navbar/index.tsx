@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { _cs } from '@togglecorp/fujs';
 
 import ItemSelectInput, { SearchItemType } from '#components/ItemSelectInput';
@@ -14,14 +14,14 @@ interface Props {
 function Navbar(props: Props) {
     const { className } = props;
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     // FIXME: use route.path
     const handleSelectItem = useCallback((item: SearchItemType | undefined) => {
         if (item) {
-            history.push(`/${item.type}/${item.id}/`);
+            navigate(`/${item.type}/${item.id}/`);
         }
-    }, [history]);
+    }, [navigate]);
 
     return (
         <nav className={_cs(className, styles.navbar)}>

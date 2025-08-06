@@ -2,7 +2,7 @@ import {
     useCallback,
     useState,
 } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import {
     isDefined,
     mapToList,
@@ -16,7 +16,7 @@ function useUrlState<T>(
         value: T,
     ) => Record<string, string | undefined | null>,
 ) {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const [state, setState] = useState(() => {
         const urlSearchParams = new URLSearchParams(window.location.search);
@@ -41,11 +41,12 @@ function useUrlState<T>(
                 (val, key) => (isDefined(val) ? [key, val] : undefined),
             ).filter(isDefined);
 
-            history.replace({
-                search: new URLSearchParams(newParams).toString(),
-            });
+            navigate(
+                { search: new URLSearchParams(newParams).toString() },
+                { replace: true },
+            );
         },
-        [history, outTransformer],
+        [navigate, outTransformer],
     );
 
     return [state, setStateSafe] as const;
