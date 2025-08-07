@@ -1,7 +1,10 @@
-import React, { Suspense } from 'react';
-import { Switch, Route } from 'react-router-dom';
-import PreloadMessage from '#base/components/PreloadMessage';
+import { Suspense } from 'react';
+import {
+    Route,
+    Switch,
+} from 'react-router-dom';
 
+import PreloadMessage from '#base/components/PreloadMessage';
 import routes from '#base/configs/routes';
 
 interface Props {

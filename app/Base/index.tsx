@@ -1,20 +1,35 @@
-import React, { useState, useMemo } from 'react';
-import { Router } from 'react-router-dom';
-import { init, ErrorBoundary } from '@sentry/react';
-import { _cs } from '@togglecorp/fujs';
-import { ApolloClient, ApolloProvider } from '@apollo/client';
+import {
+    useMemo,
+    useState,
+} from 'react';
 import ReactGA from 'react-ga';
+import { Router } from 'react-router-dom';
+import {
+    ApolloClient,
+    ApolloProvider,
+} from '@apollo/client';
+import {
+    ErrorBoundary,
+    init,
+} from '@sentry/react';
+import { _cs } from '@togglecorp/fujs';
 
-import PreloadMessage from '#base/components/PreloadMessage';
-import browserHistory from '#base/configs/history';
-import sentryConfig from '#base/configs/sentry';
-import { NavbarContext, NavbarContextInterface } from '#base/context/NavbarContext';
 import Navbar from '#base/components/Navbar';
+import PreloadMessage from '#base/components/PreloadMessage';
 import Routes from '#base/components/Routes';
 import apolloConfig from '#base/configs/apollo';
-import { trackingId, gaConfig } from '#base/configs/googleAnalytics';
+import {
+    gaConfig,
+    trackingId,
+} from '#base/configs/googleAnalytics';
+import browserHistory from '#base/configs/history';
+import sentryConfig from '#base/configs/sentry';
+import {
+    NavbarContext,
+    NavbarContextInterface,
+} from '#base/context/NavbarContext';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 if (sentryConfig) {
     init(sentryConfig);

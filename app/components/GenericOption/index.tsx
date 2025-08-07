@@ -1,9 +1,13 @@
-import React, { useCallback, useRef, useEffect } from 'react';
+import React, {
+    useCallback,
+    useEffect,
+    useRef,
+} from 'react';
 import { _cs } from '@togglecorp/fujs';
 
 import RawButton from '../RawButton';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 export interface ContentBaseProps {
     containerClassName?: string;

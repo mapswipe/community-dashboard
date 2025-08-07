@@ -1,9 +1,18 @@
-import React from 'react';
-import ReactDom from 'react-dom';
+import { StrictMode } from 'react';
+import ReactDOM from 'react-dom/client';
+
 import Base from './Base';
 
-// NOTE: let's enable strict mode
-ReactDom.render(
-    <Base />,
-    document.getElementById('app-container'),
-);
+const webappRootId = 'app-container';
+const webappRootElement = document.getElementById(webappRootId);
+
+if (!webappRootElement) {
+    // eslint-disable-next-line no-console
+    console.error(`Could not find html element with id '${webappRootId}'`);
+} else {
+    ReactDOM.createRoot(webappRootElement).render(
+        <StrictMode>
+            <Base />
+        </StrictMode>,
+    );
+}

@@ -1,30 +1,33 @@
 import React from 'react';
 import {
-    _cs,
-    randomString,
-    isDefined,
-} from '@togglecorp/fujs';
-import {
     IoCalendarOutline,
     IoClose,
 } from 'react-icons/io5';
+import {
+    _cs,
+    isDefined,
+    randomString,
+} from '@togglecorp/fujs';
 
 import useBlurEffect from '../../hooks/useBlurEffect';
 import useBooleanState from '../../hooks/useBooleanState';
-import InputContainer, { Props as InputContainerProps } from '../InputContainer';
-import RawInput from '../RawInput';
-import RawButton from '../RawButton';
 import Button from '../Button';
-import Popup from '../Popup';
 import Calendar, { Props as CalendarProps } from '../Calendar';
-import CalendarDate, { Props as CalendarDateProps, ymdToDateString, dateStringToDate } from '../Calendar/CalendarDate';
-
+import CalendarDate, {
+    dateStringToDate,
+    Props as CalendarDateProps,
+    ymdToDateString,
+} from '../Calendar/CalendarDate';
+import InputContainer, { Props as InputContainerProps } from '../InputContainer';
+import Popup from '../Popup';
+import RawButton from '../RawButton';
+import RawInput from '../RawInput';
 import {
-    predefinedDateRangeOptions,
     PredefinedDateRangeKey,
+    predefinedDateRangeOptions,
 } from './predefinedDateRange';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 // FIXME: this is problematic when on end months
 function prevMonth(date: Date) {
@@ -71,6 +74,7 @@ function DateRenderer(props: DateRendererProps) {
 
     return (
         <CalendarDate
+            // eslint-disable-next-line react/jsx-props-no-spreading
             {...otherProps}
             className={_cs(
                 styles.calendarDate,
@@ -338,6 +342,7 @@ function DateRangeInput<N extends NameType>(props: Props<N>) {
                     <div
                         className={styles.inputWrapper}
                         onClick={toggleShowCalendar}
+                        // FIXME: onKeyPress is deprecated
                         onKeyPress={toggleShowCalendar}
                         role="button"
                         tabIndex={0}

@@ -1,4 +1,8 @@
-import { useEffect, useState } from 'react';
+import {
+    useEffect,
+    useState,
+} from 'react';
+
 import useDebouncedValue from '#hooks/useDebouncedValue';
 
 function useDocumentSize() {

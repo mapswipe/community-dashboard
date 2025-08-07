@@ -3,7 +3,7 @@ import { _cs } from '@togglecorp/fujs';
 
 import Portal from '#components/Portal';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 export interface PopupProps {
     className?: string;
@@ -46,7 +46,9 @@ function getFloatPlacement(parentRef: React.RefObject<HTMLElement>): FloatingPla
 
     if (parentRef?.current) {
         const parentBCR = parentRef.current.getBoundingClientRect();
-        const { x, y, width, height } = parentBCR;
+        const {
+            x, y, width, height,
+        } = parentBCR;
 
         const cX = window.innerWidth / 2;
         const cY = window.innerHeight / 2;

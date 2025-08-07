@@ -62,7 +62,7 @@
         justify-content: center;
         padding: var(--spacing-large);
         text-align: center;
-        color: var(--color-text-message);
+        color: var(--color-text);
 
         .icon {
             opacity: 0.3;

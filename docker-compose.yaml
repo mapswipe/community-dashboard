@@ -1,0 +1,23 @@
+services:
+  react:
+    command: sh -c 'pnpm install && pnpm start'
+    build:
+      context: ../
+      target: dev
+    tty: true
+    environment:
+      NODE_OPTIONS: --openssl-legacy-provider
+      APP_TITLE: ${APP_TITLE:-Mapswipe Community Dashboard}
+      APP_ENVIRONMENT: ${APP_ENVIRONMENT:-development}
+      APP_GRAPHQL_ENDPOINT: ${APP_GRAPHQL_ENDPOINT:-http://localhost:8000/graphql/}
+      APP_GRAPHQL_CODEGEN_ENDPOINT: ${GRAPHQL_CODEGEN_ENDPOINT:-./backend/schema.graphql}
+      APP_MAPSWIPE_WEBSITE: ${APP_MAPSWIPE_WEBSITE:-https://mapswipe.org}
+      # TODO: Make the DSN env variable optional in env
+      APP_SENTRY_DSN: ${APP_SENTRY_DSN:-}
+      APP_SENTRY_TRACES_SAMPLE_RATE: ${APP_SENTRY_TRACES_SAMPLE_RATE:-}
+    env_file:
+      - ../.env
+    volumes:
+      - ../:/code
+    ports:
+      - '3000:3000'

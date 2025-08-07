@@ -1,0 +1,37 @@
+{
+    "$schema": "https://unpkg.com/knip@5/schema.json",
+    "ignoreDependencies": [
+        // TODO: We should be able to remove these once we
+        // completely migrate to new configuration
+        // https://github.com/airbnb/javascript/issues/2961
+        "eslint-config-airbnb",
+        "eslint-plugin-import-exports-imports-resolver",
+        "eslint-plugin-import-newlines",
+        "eslint-plugin-jsx-a11y",
+        "eslint-plugin-react",
+        "eslint-plugin-react-hooks",
+        "eslint-plugin-react-refresh",
+        "eslint-plugin-simple-import-sort",
+        // We are using this with dotenv and cross-var so we are getting a false positive
+        "openapi-typescript",
+        // We are using this in eslint.config.js but we are getting a false positive
+        "@typescript-eslint/parser",
+        "@typescript-eslint/eslint-plugin"
+    ],
+    "entry": [
+        "generated/**/*.ts",
+        "app/**/*.test.ts",
+        "app/**/*.test.tsx",
+        "app/index.tsx!"
+    ],
+    "project": [
+        "scripts/**/*.test.ts",
+        "scripts/**/*.ts",
+        "app/**/*.d.ts",
+        "generated/**/*.ts",
+        "app/**/*.test.ts",
+        "app/**/*.test.tsx",
+        "app/**/*.tsx!",
+        "app/**/*.ts!"
+    ]
+}

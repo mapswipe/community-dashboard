@@ -4,7 +4,7 @@ import {
     isNotDefined,
 } from '@togglecorp/fujs';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 function isString(d: unknown): d is string {
     return (typeof d) === 'string';

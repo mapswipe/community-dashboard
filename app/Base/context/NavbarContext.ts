@@ -12,5 +12,3 @@ export const NavbarContext = createContext<NavbarContextInterface>({
         console.error('setNavbarVisibility called on NavbarContext without a provider', value);
     },
 });
-
-export default NavbarContext;

@@ -1,6 +1,12 @@
-import { useState, useCallback } from 'react';
+import {
+    useCallback,
+    useState,
+} from 'react';
 import { useHistory } from 'react-router-dom';
-import { isDefined, mapToList } from '@togglecorp/fujs';
+import {
+    isDefined,
+    mapToList,
+} from '@togglecorp/fujs';
 
 function useUrlState<T>(
     inTransformer: (

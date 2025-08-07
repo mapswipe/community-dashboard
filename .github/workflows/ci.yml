@@ -30,9 +30,9 @@ jobs:
       - name: 🤞 Run Build 🧪
         run: yarn build
         env:
-          REACT_APP_SENTRY_DSN: 'https://random-token@sentry.io'
-          REACT_APP_SENTRY_TRACES_SAMPLE_RATE: 0.2
-          REACT_APP_ENVIRONMENT: 'ci'
+          APP_SENTRY_DSN: 'https://random-token@sentry.io'
+          APP_SENTRY_TRACES_SAMPLE_RATE: 0.2
+          APP_ENVIRONMENT: 'ci'
           GRAPHQL_CODEGEN_ENDPOINT: 'https://random-domain.com/graphql/'
-          REACT_APP_GRAPHQL_ENDPOINT: 'https://random-domain.com/graphql/'
-          REACT_APP_MAPSWIPE_WEBSITE: 'https://random-website-domain.com'
+          APP_GRAPHQL_ENDPOINT: 'https://random-domain.com/graphql/'
+          APP_MAPSWIPE_WEBSITE: 'https://random-website-domain.com'

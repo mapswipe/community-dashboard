@@ -1,27 +1,34 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, {
+    useCallback,
+    useMemo,
+    useState,
+} from 'react';
 // import { useLocation } from 'react-router-dom';
 import {
     IoCheckmark,
-    IoPerson,
     IoPeople,
+    IoPerson,
     IoSearch,
 } from 'react-icons/io5';
-import { isFalsyString, _cs } from '@togglecorp/fujs';
 import {
-    useQuery,
     gql,
+    useQuery,
 } from '@apollo/client';
 import {
-    UserOptionsQuery,
-    UserOptionsQueryVariables,
+    _cs,
+    isFalsyString,
+} from '@togglecorp/fujs';
+
+import SearchSelectInput, { SearchSelectInputProps } from '#components/SelectInput/SearchSelectInput';
+import {
     UserGroupOptionsQuery,
     UserGroupOptionsQueryVariables,
+    UserOptionsQuery,
+    UserOptionsQueryVariables,
 } from '#generated/types';
-import SearchSelectInput, {
-    SearchSelectInputProps,
-} from '#components/SelectInput/SearchSelectInput';
 import useDebouncedValue from '#hooks/useDebouncedValue';
-import styles from './styles.css';
+
+import styles from './styles.module.css';
 
 export type SearchItemType = {
     id: string;
@@ -150,6 +157,7 @@ function Option(props: OptionProps) {
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function titleSelector(item: SearchItemType) {
     return item.name;
 }
@@ -248,64 +256,63 @@ function ItemSelectInput<Name extends string>(props: ItemSelectInputProps<Name>)
         [],
     );
 
-    const handleShowMoreClick = useCallback(
-        () => {
-            fetchMoreUser({
-                variables: {
-                    offset: (userData?.contributorUsers.pageInfo.offset ?? 0) + LIMIT,
-                },
-                updateQuery: (previousResult, { fetchMoreResult }) => {
-                    const oldUsers = previousResult;
-                    const newUsers = fetchMoreResult;
+    const handleShowMoreClick = useCallback(() => {
+        fetchMoreUser({
+            variables: {
+                offset: (userData?.contributorUsers.pageInfo.offset ?? 0) + LIMIT,
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+                const oldUsers = previousResult;
+                const newUsers = fetchMoreResult;
 
-                    if (!newUsers) {
-                        return previousResult;
-                    }
+                if (!newUsers) {
+                    return previousResult;
+                }
 
-                    return ({
-                        contributorUsers: {
-                            ...newUsers.contributorUsers,
-                            results: [
-                                ...oldUsers.contributorUsers?.results ?? [],
-                                ...newUsers.contributorUsers?.results ?? [],
-                            ],
-                        },
-                    });
-                },
-            });
-            fetchMoreUserGroup({
-                variables: {
-                    offset: (userGroupData?.contributorUserGroups.pageInfo.offset ?? 0) + LIMIT,
-                },
-                updateQuery: (previousResult, { fetchMoreResult }) => {
-                    const oldUserGroups = previousResult;
-                    const newUserGroups = fetchMoreResult;
+                return ({
+                    contributorUsers: {
+                        ...newUsers.contributorUsers,
+                        results: [
+                            ...oldUsers.contributorUsers?.results ?? [],
+                            ...newUsers.contributorUsers?.results ?? [],
+                        ],
+                    },
+                });
+            },
+        });
+        fetchMoreUserGroup({
+            variables: {
+                offset: (userGroupData?.contributorUserGroups.pageInfo.offset ?? 0) + LIMIT,
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+                const oldUserGroups = previousResult;
+                const newUserGroups = fetchMoreResult;
 
-                    if (!newUserGroups) {
-                        return previousResult;
-                    }
+                if (!newUserGroups) {
+                    return previousResult;
+                }
 
-                    return ({
-                        contributorUserGroups: {
-                            ...newUserGroups.contributorUserGroups,
-                            results: [
-                                ...oldUserGroups.contributorUserGroups.results ?? [],
-                                ...newUserGroups.contributorUserGroups.results ?? [],
-                            ],
-                        },
-                    });
-                },
-            });
-        }, [
-            fetchMoreUser,
-            fetchMoreUserGroup,
-            userData?.contributorUsers.pageInfo.offset,
-            userGroupData?.contributorUserGroups.pageInfo.offset,
-        ],
-    );
+                return ({
+                    contributorUserGroups: {
+                        ...newUserGroups.contributorUserGroups,
+                        results: [
+                            ...oldUserGroups.contributorUserGroups.results ?? [],
+                            ...newUserGroups.contributorUserGroups.results ?? [],
+                        ],
+                    },
+                });
+            },
+        });
+    }, [
+        fetchMoreUser,
+        fetchMoreUserGroup,
+        userData?.contributorUsers.pageInfo.offset,
+        userGroupData?.contributorUserGroups.pageInfo.offset,
+    ]);
 
     return (
         <SearchSelectInput
+            // eslint-disable-next-line react/jsx-props-no-spreading
             {...otherProps}
             className={className}
             name="item-select-input"

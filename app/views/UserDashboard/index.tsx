@@ -1,31 +1,38 @@
 import React, { useMemo } from 'react';
-import { gql, useQuery } from '@apollo/client';
-import { encodeDate, isDefined, isFalsyString } from '@togglecorp/fujs';
 import {
-    useParams,
     generatePath,
     Link,
+    useParams,
 } from 'react-router-dom';
+import {
+    gql,
+    useQuery,
+} from '@apollo/client';
+import {
+    encodeDate,
+    isDefined,
+    isFalsyString,
+} from '@togglecorp/fujs';
 
-import useUrlState from '#hooks/useUrlState';
 import routes from '#base/configs/routes';
 import { MapContributionType } from '#components/ContributionHeatMap';
-import InformationCard from '#components/InformationCard';
+import { getThisYear } from '#components/DateRangeInput/predefinedDateRange';
 import Heading from '#components/Heading';
-import Pager from '#components/Pager';
+import InformationCard from '#components/InformationCard';
 import Page from '#components/Page';
+import Pager from '#components/Pager';
 import {
-    UserStatsQuery,
-    UserStatsQueryVariables,
     FilteredUserStatsQuery,
     FilteredUserStatsQueryVariables,
+    UserStatsQuery,
+    UserStatsQueryVariables,
 } from '#generated/types';
+import useUrlState from '#hooks/useUrlState';
 import groupSvg from '#resources/icons/group.svg';
-import StatsBoard from '#views/StatsBoard';
-import { getThisYear } from '#components/DateRangeInput/predefinedDateRange';
 import { defaultPagePerItemOptions } from '#utils/common';
+import StatsBoard from '#views/StatsBoard';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 const USER_STATS = gql`
     query UserStats($pk: ID!, $limit: Int!, $offset: Int!) {

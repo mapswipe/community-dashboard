@@ -1,12 +1,17 @@
-import React from 'react';
-import { Link, generatePath } from 'react-router-dom';
-import { isDefined, isFalsyString } from '@togglecorp/fujs';
+import {
+    generatePath,
+    Link,
+} from 'react-router-dom';
+import {
+    isDefined,
+    isFalsyString,
+} from '@togglecorp/fujs';
 
-import NumberOutput from '#components/NumberOutput';
 import routes from '#base/configs/routes';
+import NumberOutput from '#components/NumberOutput';
 import { formatTimeDuration } from '#utils/temporal';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 interface Props {
     member: {

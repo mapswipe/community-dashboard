@@ -1,31 +1,40 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { gql, useQuery, useLazyQuery } from '@apollo/client';
-import { encodeDate, isFalsyString } from '@togglecorp/fujs';
+import React, {
+    useCallback,
+    useMemo,
+    useState,
+} from 'react';
 import { useParams } from 'react-router-dom';
+import {
+    gql,
+    useLazyQuery,
+    useQuery,
+} from '@apollo/client';
+import {
+    encodeDate,
+    isFalsyString,
+} from '@togglecorp/fujs';
 
-import StatsBoard from '#views/StatsBoard';
-
-import useUrlState from '#hooks/useUrlState';
 import Button from '#components/Button';
-import List from '#components/List';
-import MemberItem from '#components/MemberItem';
-import Heading from '#components/Heading';
-import Pager from '#components/Pager';
-import Page from '#components/Page';
 import { MapContributionType } from '#components/ContributionHeatMap';
 import { getThisYear } from '#components/DateRangeInput/predefinedDateRange';
-
+import Heading from '#components/Heading';
+import List from '#components/List';
+import MemberItem from '#components/MemberItem';
+import Page from '#components/Page';
+import Pager from '#components/Pager';
 import {
-    UserGroupStatsQuery,
-    UserGroupStatsQueryVariables,
     FilteredUserGroupStatsQuery,
     FilteredUserGroupStatsQueryVariables,
+    UserGroupStatsQuery,
+    UserGroupStatsQueryVariables,
     UserMembershipsExportQuery,
     UserMembershipsExportQueryVariables,
 } from '#generated/types';
+import useUrlState from '#hooks/useUrlState';
 import { defaultPagePerItemOptions } from '#utils/common';
+import StatsBoard from '#views/StatsBoard';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 const EXPORT_LIMIT = 500;
 
@@ -202,15 +211,13 @@ function UserGroupDashboard(props: Props) {
         },
     );
 
-    const userGroupExportVariable = useMemo(
-        (): UserMembershipsExportQueryVariables | undefined => (
-            userGroupId ? {
-                pk: userGroupId,
-                limit: EXPORT_LIMIT,
-                offset: 0,
-            } : undefined
-        ), [userGroupId],
-    );
+    const userGroupExportVariable = useMemo((): UserMembershipsExportQueryVariables | undefined => (
+        userGroupId ? {
+            pk: userGroupId,
+            limit: EXPORT_LIMIT,
+            offset: 0,
+        } : undefined
+    ), [userGroupId]);
 
     const [
         exportUserMembership,

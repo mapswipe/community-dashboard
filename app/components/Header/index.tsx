@@ -4,7 +4,7 @@ import { _cs } from '@togglecorp/fujs';
 import Element from '../Element';
 import Heading, { Props as HeadingProps } from '../Heading';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 export interface Props {
     actions?: React.ReactNode;
@@ -53,6 +53,7 @@ function Header(props: Props) {
                 styles.header,
                 className,
             )}
+            // eslint-disable-next-line react/jsx-props-no-spreading
             {...elementProps}
         >
             <Element

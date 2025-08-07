@@ -1,11 +1,11 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { _cs } from '@togglecorp/fujs';
 
-import mapSwipeLogo from '#resources/img/logo.svg';
 import ItemSelectInput, { SearchItemType } from '#components/ItemSelectInput';
+import mapSwipeLogo from '#resources/img/logo.svg';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 interface Props {
     className?: string;
@@ -28,7 +28,7 @@ function Navbar(props: Props) {
             <div className={styles.container}>
                 <div className={styles.navLinks}>
                     <a
-                        href={process.env.REACT_APP_MAPSWIPE_WEBSITE ?? 'https://mapswipe.org'}
+                        href={import.meta.env.REACT_APP_MAPSWIPE_WEBSITE ?? 'https://mapswipe.org'}
                         className={styles.link}
                     >
                         <div className={styles.appBrand}>

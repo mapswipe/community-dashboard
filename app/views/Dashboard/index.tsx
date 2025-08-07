@@ -1,20 +1,21 @@
 import React from 'react';
-import { encodeDate } from '@togglecorp/fujs';
 import {
     gql,
     useQuery,
 } from '@apollo/client';
-import useUrlState from '#hooks/useUrlState';
+import { encodeDate } from '@togglecorp/fujs';
+
 import { MapContributionType } from '#components/ContributionHeatMap';
-import Page from '#components/Page';
-import StatsBoard from '#views/StatsBoard';
 import { getThisYear } from '#components/DateRangeInput/predefinedDateRange';
+import Page from '#components/Page';
 import {
     CommunityStatsQuery,
     CommunityStatsQueryVariables,
     FilteredCommunityStatsQuery,
     FilteredCommunityStatsQueryVariables,
 } from '#generated/types';
+import useUrlState from '#hooks/useUrlState';
+import StatsBoard from '#views/StatsBoard';
 
 const COMMUNITY_STATS = gql`
     query CommunityStats {

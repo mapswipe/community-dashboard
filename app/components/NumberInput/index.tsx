@@ -1,5 +1,15 @@
-import React, { useState, useLayoutEffect, useCallback } from 'react';
-import { isDefined, isFalsyString, isTruthyString, bound } from '@togglecorp/fujs';
+import React, {
+    useCallback,
+    useLayoutEffect,
+    useState,
+} from 'react';
+import {
+    bound,
+    isDefined,
+    isFalsyString,
+    isTruthyString,
+} from '@togglecorp/fujs';
+
 import InputContainer, { Props as InputContainerProps } from '../InputContainer';
 import RawInput, { Props as RawInputProps } from '../RawInput';
 
@@ -124,6 +134,7 @@ function NumberInput<T extends string>(props: NumberInputProps<T>) {
             invalid={isTruthyString(tempValue)}
             input={(
                 <RawInput
+                    // eslint-disable-next-line react/jsx-props-no-spreading
                     {...rawInputProps}
                     readOnly={readOnly}
                     disabled={disabled}

@@ -1,13 +1,16 @@
 import React from 'react';
-import { NavLink, NavLinkProps } from 'react-router-dom';
+import {
+    NavLink,
+    NavLinkProps,
+} from 'react-router-dom';
 import { _cs } from '@togglecorp/fujs';
 
 import useRouteMatching, {
-    RouteData,
     Attrs,
+    RouteData,
 } from '#base/hooks/useRouteMatching';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 export type Props = Omit<NavLinkProps, 'to'> & {
     route: RouteData;
@@ -33,6 +36,7 @@ function SmartNavLink(props: Props) {
 
     return (
         <NavLink
+            // eslint-disable-next-line react/jsx-props-no-spreading
             {...otherProps}
             to={routeData.to}
             className={_cs(styles.smartNavLink, className)}

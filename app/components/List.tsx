@@ -1,4 +1,7 @@
-import React, { useMemo, memo } from 'react';
+import React, {
+    memo,
+    useMemo,
+} from 'react';
 import {
     isNotDefined,
     listToGroupList,
@@ -51,6 +54,7 @@ function hasGroup<D, P, K extends OptionKey, GP, GK extends OptionKey>(
     return !!(props as BaseProps<D, P, K> & GroupOptions<D, GP, GK>).grouped;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function GroupedList<D, P, K extends OptionKey, GP extends GroupCommonProps, GK extends OptionKey>(
     props: GroupedListProps<D, P, K, GP, GK>,
 ) {
@@ -77,6 +81,7 @@ function GroupedList<D, P, K extends OptionKey, GP extends GroupCommonProps, GK 
             <Renderer
                 key={key}
                 className={rendererClassName}
+                // eslint-disable-next-line react/jsx-props-no-spreading
                 {...extraProps}
             />
         );
@@ -100,6 +105,7 @@ function GroupedList<D, P, K extends OptionKey, GP extends GroupCommonProps, GK 
             <GroupRenderer
                 key={groupKey}
                 // FIXME: currently typescript is not smart enough to join Omit
+                // eslint-disable-next-line react/jsx-props-no-spreading
                 {...finalProps as GP}
             />
         );
@@ -123,12 +129,14 @@ function GroupedList<D, P, K extends OptionKey, GP extends GroupCommonProps, GK 
     ));
 
     return (
+        // eslint-disable-next-line react/jsx-no-useless-fragment
         <>
-            {children}
+            { children }
         </>
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function List<D, P, K extends OptionKey, GP extends GroupCommonProps, GK extends OptionKey>(
     props: ListProps<D, P, K, GP, GK>,
 ) {
@@ -152,6 +160,7 @@ function List<D, P, K extends OptionKey, GP extends GroupCommonProps, GK extends
             <Renderer
                 key={key}
                 className={rendererClassName}
+                // eslint-disable-next-line react/jsx-props-no-spreading
                 {...extraProps}
             />
         );
@@ -167,9 +176,11 @@ function List<D, P, K extends OptionKey, GP extends GroupCommonProps, GK extends
 
     return (
         <GroupedList
+            // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
         />
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default typedMemo(List);

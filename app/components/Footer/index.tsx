@@ -1,9 +1,13 @@
-import React from 'react';
-import { IoLogoTwitter, IoLogoGithub, IoMail } from 'react-icons/io5';
-import iosSvg from '#resources/icons/ios.svg';
-import androidSvg from '#resources/icons/android.svg';
+import {
+    IoLogoGithub,
+    IoLogoTwitter,
+    IoMail,
+} from 'react-icons/io5';
 
-import styles from './styles.css';
+import androidSvg from '#resources/icons/android.svg';
+import iosSvg from '#resources/icons/ios.svg';
+
+import styles from './styles.module.css';
 
 function Footer() {
     return (

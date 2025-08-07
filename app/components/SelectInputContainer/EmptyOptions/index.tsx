@@ -1,8 +1,9 @@
 import React from 'react';
 import { IoChevronForward } from 'react-icons/io5';
+
 import Button from '#components/Button';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 interface DefaultEmptyComponentProps {
     pending?: boolean;

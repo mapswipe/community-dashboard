@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Page, { Props as PageProps } from '#base/components/Page';
 
 export function joinUrlPart(foo: string, bar: string) {
@@ -33,6 +31,7 @@ export function wrap<T extends string, K extends { className?: string }>(
                 component={component}
                 componentProps={componentProps}
                 overrideProps={overrideProps}
+                // eslint-disable-next-line react/jsx-props-no-spreading
                 {...otherProps}
             />
         ),

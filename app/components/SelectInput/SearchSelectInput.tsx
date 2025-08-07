@@ -1,15 +1,20 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, {
+    useCallback,
+    useMemo,
+    useState,
+} from 'react';
+import { IoCheckmark } from 'react-icons/io5';
 import {
     _cs,
+    isDefined,
     listToMap,
     unique,
-    isDefined,
 } from '@togglecorp/fujs';
-import { IoCheckmark } from 'react-icons/io5';
+
 import SelectInputContainer, { SelectInputContainerProps } from '../SelectInputContainer';
 import { rankedSearchOnList } from './utils';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 interface OptionProps {
     children?: React.ReactNode;
@@ -42,7 +47,7 @@ type OptionKey = string | number;
 export type SearchSelectInputProps<
     T extends OptionKey,
     K,
-    O extends object, // eslint-disable-line
+    O extends object,
     P extends Def,
     OMISSION extends string,
 > = Omit<{
@@ -275,6 +280,7 @@ function SearchSelectInput<
 
     return (
         <SelectInputContainer
+            // eslint-disable-next-line react/jsx-props-no-spreading
             {...otherProps}
             name={name}
             options={realOptions}

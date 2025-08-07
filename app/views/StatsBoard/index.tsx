@@ -1,66 +1,67 @@
 import React, { useMemo } from 'react';
 import {
+    AiOutlineBarChart,
+    AiOutlineLineChart,
+    AiOutlinePieChart,
+} from 'react-icons/ai';
+import {
+    _cs,
+    compareNumber,
     isDefined,
     listToGroupList,
-    mapToList,
-    _cs,
-    sum,
-    compareNumber,
     listToMap,
+    mapToList,
+    sum,
 } from '@togglecorp/fujs';
 import { scaleOrdinal } from 'd3-scale';
 import {
-    AreaChart,
-    ResponsiveContainer,
-    XAxis,
-    YAxis,
     Area,
-    Tooltip,
-    PieChart,
-    Pie,
-    Legend,
-    Cell,
+    AreaChart,
+    Bar,
     BarChart,
     CartesianGrid,
-    Bar,
+    Cell,
+    Legend,
+    Pie,
+    PieChart,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
 } from 'recharts';
-import {
-    AiOutlineLineChart,
-    AiOutlineBarChart,
-    AiOutlinePieChart,
-} from 'react-icons/ai';
-// import { formatDuration, intervalToDuration } from 'date-fns';
 
-import useDocumentSize from '#hooks/useDocumentSize';
-import ContributionHeatmap, { MapContributionType } from '#components/ContributionHeatMap';
 import CalendarHeatMapContainer from '#components/CalendarHeatMapContainer';
-import NumberOutput from '#components/NumberOutput';
-import TextOutput from '#components/TextOutput';
-import SegmentInput from '#components/SegmentInput';
-import Heading from '#components/Heading';
+import ContributionHeatmap, { MapContributionType } from '#components/ContributionHeatMap';
 import DateRangeInput from '#components/DateRangeInput';
+import Heading from '#components/Heading';
 import InformationCard from '#components/InformationCard';
-import areaSvg from '#resources/icons/area.svg';
-import sceneSvg from '#resources/icons/scene.svg';
-import featureSvg from '#resources/icons/feature.svg';
+import NumberOutput from '#components/NumberOutput';
+import SegmentInput from '#components/SegmentInput';
+import TextOutput from '#components/TextOutput';
 import {
+    ContributorSwipeStatType,
     ContributorTimeStatType,
     OrganizationSwipeStatsType,
-    ProjectTypeSwipeStatsType,
     ProjectTypeAreaStatsType,
-    ContributorSwipeStatType,
+    ProjectTypeSwipeStatsType,
 } from '#generated/types';
+// import { formatDuration, intervalToDuration } from 'date-fns';
+import useDocumentSize from '#hooks/useDocumentSize';
+import areaSvg from '#resources/icons/area.svg';
+import featureSvg from '#resources/icons/feature.svg';
+import sceneSvg from '#resources/icons/scene.svg';
 import { mergeItems } from '#utils/common';
 import {
-    formatTimeDuration,
     formatDate,
     formatMonth,
+    formatTimeDuration,
     formatYear,
-    resolveTime,
-    getTimestamps,
     getDateSafe,
+    getTimestamps,
+    resolveTime,
 } from '#utils/temporal';
-import styles from './styles.css';
+
+import styles from './styles.module.css';
 
 const CHART_BREAKPOINT = 700;
 

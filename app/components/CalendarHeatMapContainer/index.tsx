@@ -1,13 +1,17 @@
-import React, { useEffect } from 'react';
-import { compareDate, encodeDate, getDifferenceInDays } from '@togglecorp/fujs';
+import { useEffect } from 'react';
 import CalendarHeatmap from 'react-calendar-heatmap';
-import { scaleQuantile } from 'd3-scale';
 import ReactTooltip from 'react-tooltip';
-import InformationCard from '#components/InformationCard';
+import {
+    compareDate,
+    encodeDate,
+    getDifferenceInDays,
+} from '@togglecorp/fujs';
+import { scaleQuantile } from 'd3-scale';
 
+import InformationCard from '#components/InformationCard';
 import { getDateSafe } from '#utils/temporal';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 const githubColors = [' #eeeeee', '#d6e685', '#8cc665', '#44a340', '#1e6823'];
 const githubColorsClass = ['color-github-0', 'color-github-1', 'color-github-2', 'color-github-3', 'color-github-4'];
@@ -26,8 +30,10 @@ function getDateRange(data: Data[] | null | undefined) {
     const startDate = sortedData[0].date;
     const endDate = sortedData[sortedData.length - 1].date;
 
-    if (getDifferenceInDays(getDateSafe(endDate).getTime(),
-        getDateSafe(startDate).getTime()) <= 365) {
+    if (getDifferenceInDays(
+        getDateSafe(endDate).getTime(),
+        getDateSafe(startDate).getTime(),
+    ) <= 365) {
         const currentYear = getDateSafe(startDate).getFullYear();
         return {
             startDate: encodeDate(new Date(currentYear, 0, 1)),

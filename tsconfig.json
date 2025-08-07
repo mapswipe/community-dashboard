@@ -1,19 +1,5 @@
 {
     "compilerOptions": {
-        "isolatedModules": true,
-        "jsx": "react",
-        "module": "esnext",
-        "noEmit": true,
-        "rootDir": ".",
-        "target": "esnext",
-
-        "strict": true,
-
-        "allowSyntheticDefaultImports": true,
-        "baseUrl": ".",
-        "esModuleInterop": true,
-        "moduleResolution": "node",
-
         "paths": {
             "#generated/*": ["./generated/*"],
             "#components/*": ["./app/components/*"],
@@ -21,21 +7,29 @@
             "#resources/*": ["./app/resources/*"],
             "#base/*": ["./app/Base/*"],
             "#utils/*": ["./app/Base/utils/*"],
-            "#hooks/*": ["./app/hooks/*"],
+            "#hooks/*": ["./app/hooks/*"]
         },
+        "target": "ESNext",
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
+        "module": "ESNext",
+        "skipLibCheck": true,
 
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitReturns": true,
+        /* Bundler mode */
+        "moduleResolution": "node",
+        "allowImportingTsExtensions": true,
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "jsx": "react-jsx",
+        "rootDir": ".",
+
+        /* Linting */
+        "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-
-        "forceConsistentCasingInFileNames": true,
-        "resolveJsonModule": true,
-        "skipLibCheck": true
+        "noFallthroughCasesInSwitch": true
     },
-    "include": [
-        "./app/index.tsx",
-        "./app/declarations",
-        "./generated/types.tsx"
-    ]
+    "include": ["app"],
+    "references": [{ "path": "./tsconfig.node.json" }]
 }

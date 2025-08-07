@@ -1,9 +1,5 @@
-import React from 'react';
-
 import SearchSelectInput, { SearchSelectInputProps } from './SearchSelectInput';
-import {
-    rankedSearchOnList,
-} from './utils';
+import { rankedSearchOnList } from './utils';
 
 type Def = { containerClassName?: string };
 type OptionKey = string | number;
@@ -11,12 +7,10 @@ type OptionKey = string | number;
 export type SelectInputProps<
     T extends OptionKey,
     K extends string,
-    // eslint-disable-next-line @typescript-eslint/ban-types
     O extends object,
     P extends Def,
 > = SearchSelectInputProps<T, K, O, P, 'onSearchValueChange' | 'searchOptions' | 'onShowDropdownChange' | 'totalOptionsCount' | 'optionRenderer' | 'optionRendererParams'>;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 function SelectInput<T extends OptionKey, K extends string, O extends object, P extends Def>(
     props: SelectInputProps<T, K, O, P>,
 ) {
@@ -24,23 +18,21 @@ function SelectInput<T extends OptionKey, K extends string, O extends object, P 
         name,
         options,
         labelSelector,
-        nonClearable, // eslint-disable-line @typescript-eslint/no-unused-vars
-        onChange, // eslint-disable-line @typescript-eslint/no-unused-vars
+        nonClearable,
+        onChange,
         totalOptionsCount, // eslint-disable-line @typescript-eslint/no-unused-vars
         ...otherProps
     } = props;
 
     // NOTE: this looks weird but we need to use typeguard to identify between
     // different union types (for onChange and nonClearable)
-    // eslint-disable-next-line react/destructuring-assignment
-    if (props.nonClearable) {
+    if (nonClearable) {
         return (
             <SearchSelectInput
+                // eslint-disable-next-line react/jsx-props-no-spreading
                 {...otherProps}
-                // eslint-disable-next-line react/destructuring-assignment
-                onChange={props.onChange}
-                // eslint-disable-next-line react/destructuring-assignment
-                nonClearable={props.nonClearable}
+                onChange={onChange}
+                nonClearable={nonClearable}
                 name={name}
                 options={options}
                 labelSelector={labelSelector}
@@ -51,11 +43,10 @@ function SelectInput<T extends OptionKey, K extends string, O extends object, P 
     }
     return (
         <SearchSelectInput
+            // eslint-disable-next-line react/jsx-props-no-spreading
             {...otherProps}
-            // eslint-disable-next-line react/destructuring-assignment
-            onChange={props.onChange}
-            // eslint-disable-next-line react/destructuring-assignment
-            nonClearable={props.nonClearable}
+            onChange={onChange}
+            nonClearable={nonClearable}
             name={name}
             options={options}
             labelSelector={labelSelector}

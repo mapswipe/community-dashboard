@@ -1,11 +1,14 @@
-import React, { memo, useMemo } from 'react';
+import React, {
+    memo,
+    useMemo,
+} from 'react';
 import {
-    isNotDefined,
-    isDefined,
     _cs,
+    isDefined,
+    isNotDefined,
 } from '@togglecorp/fujs';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 export interface Props {
     className?: string;

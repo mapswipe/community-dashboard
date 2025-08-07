@@ -1,7 +1,7 @@
 import {
-    isFalsyString,
     caseInsensitiveSubmatch,
     compareStringSearch,
+    isFalsyString,
 } from '@togglecorp/fujs';
 
 export function rankedSearchOnList<T>(

@@ -1,5 +1,8 @@
 import { useCallback } from 'react';
-import { modulo, isDefined } from '@togglecorp/fujs';
+import {
+    isDefined,
+    modulo,
+} from '@togglecorp/fujs';
 
 type OptionKey = string | number | boolean;
 

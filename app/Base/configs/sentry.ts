@@ -1,18 +1,21 @@
 import { matchPath } from 'react-router-dom';
-import { reactRouterV5Instrumentation, BrowserOptions } from '@sentry/react';
+import {
+    BrowserOptions,
+    reactRouterV5Instrumentation,
+} from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 
 import browserHistory from '#base/configs/history';
 import routes from '#base/configs/routes';
 
-const appName = process.env.MY_APP_ID;
+const appName = import.meta.env.MY_APP_ID;
 
-const sentryDsn = process.env.REACT_APP_SENTRY_DSN;
+const sentryDsn = import.meta.env.APP_SENTRY_DSN;
 
-const tracesSampleRateFromEnv = Number(process.env.REACT_APP_SENTRY_DSN);
+const tracesSampleRateFromEnv = Number(import.meta.env.APP_SENTRY_DSN);
 const tracesSampleRate = Number.isNaN(tracesSampleRateFromEnv) ? 0.2 : tracesSampleRateFromEnv;
 
-const env = process.env.REACT_APP_ENVIRONMENT;
+const env = import.meta.env.APP_ENVIRONMENT;
 
 const sentryConfig: BrowserOptions | undefined = sentryDsn ? {
     dsn: sentryDsn,

@@ -3,7 +3,7 @@ import { _cs } from '@togglecorp/fujs';
 
 import RawButton, { Props as RawButtonProps } from '../../RawButton';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 export interface Props {
     className?: string;
@@ -33,6 +33,7 @@ export function dateStringToDate(value: string) {
     return new Date(`${value}T00:00`);
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function CalendarDate(props: Props) {
     const {
         className,
@@ -78,4 +79,5 @@ function CalendarDate(props: Props) {
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default typedMemo(CalendarDate);
