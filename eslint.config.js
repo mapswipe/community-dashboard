@@ -72,7 +72,7 @@ const appConfigs = compat.config({
             },
         ],
 
-        indent: ['error', 4, { SwitchCase: 1 }],
+        indent: ['warn', 4],
 
         'import/no-cycle': ['error', { allowUnsafeDynamicCyclicDependency: true }],
 
