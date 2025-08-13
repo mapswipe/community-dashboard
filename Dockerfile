@@ -25,11 +25,8 @@ COPY . /code/
 
 ENV APP_GRAPHQL_CODEGEN_ENDPOINT=./backend/schema.graphql
 ENV APP_GRAPHQL_ENDPOINT=http://localhost:8000/graphql/
-ENV APP_TITLE="Mapswipe Community Dashboard"
 ENV APP_ENVIRONMENT=development
-ENV APP_MAPSWIPE_WEBSITE=https://mapswipe.org
 ENV APP_SENTRY_DSN=temp
-ENV APP_SENTRY_TRACES_SAMPLE_RATE=temp
 
 RUN pnpm generate:type && WEB_APP_SERVE_ENABLED=true pnpm build
 

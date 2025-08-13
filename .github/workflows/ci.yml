@@ -42,9 +42,6 @@ jobs:
         run: pnpm build
         env:
           APP_ENVIRONMENT: 'ci'
-          APP_TITLE: 'Community Dashboard'
           APP_SENTRY_DSN: 'https://random-token@sentry.io'
-          APP_SENTRY_TRACES_SAMPLE_RATE: 0.2
           APP_GRAPHQL_CODEGEN_ENDPOINT: 'https://random-domain.com/graphql/'
           APP_GRAPHQL_ENDPOINT: 'https://random-domain.com/graphql/'
-          APP_MAPSWIPE_WEBSITE: 'https://random-website-domain.com'

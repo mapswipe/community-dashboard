@@ -18,10 +18,8 @@ export default defineConfig({
     validator: 'builtin',
     schema: {
         // NOTE: These are the dynamic env variables
-        APP_TITLE: Schema.string(),
         APP_GRAPHQL_ENDPOINT: Schema.string({ format: 'url', protocol: true, tld: false }),
         APP_SENTRY_DSN: Schema.string.optional(),
-        APP_SENTRY_TRACES_SAMPLE_RATE: Schema.string.optional(),
         APP_ENVIRONMENT: (key: string, value: string) => {
             // NOTE: APP_ENVIRONMENT_PLACEHOLDER is meant to be used with image builds
             // The value will be later replaced with the actual value
@@ -37,6 +35,5 @@ export default defineConfig({
         },
 
         APP_GRAPHQL_CODEGEN_ENDPOINT: Schema.string(),
-        APP_MAPSWIPE_WEBSITE: Schema.string(),
     },
 });
