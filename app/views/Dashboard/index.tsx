@@ -13,7 +13,7 @@ import {
     CommunityStatsQueryVariables,
     FilteredCommunityStatsQuery,
     FilteredCommunityStatsQueryVariables,
-} from '#generated/types';
+} from '#generated/types/graphql';
 import useUrlState from '#hooks/useUrlState';
 import StatsBoard from '#views/StatsBoard';
 

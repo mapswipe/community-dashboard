@@ -21,7 +21,7 @@ import 'leaflet.heat';
 import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css';
 import 'leaflet/dist/leaflet.css';
 
-import { MapContributionStatsType } from '#generated/types';
+import { MapContributionStatsType } from '#generated/types/graphql';
 
 import styles from './styles.module.css';
 

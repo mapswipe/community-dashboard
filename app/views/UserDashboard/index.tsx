@@ -26,7 +26,7 @@ import {
     FilteredUserStatsQueryVariables,
     UserStatsQuery,
     UserStatsQueryVariables,
-} from '#generated/types';
+} from '#generated/types/graphql';
 import useUrlState from '#hooks/useUrlState';
 import groupSvg from '#resources/icons/group.svg';
 import { defaultPagePerItemOptions } from '#utils/common';
@@ -36,7 +36,7 @@ import styles from './styles.module.css';
 
 const USER_STATS = gql`
     query UserStats($pk: ID!, $limit: Int!, $offset: Int!) {
-        contributorUser(id: $pk) {
+        contributorUserByFirebaseId(firebaseId: $pk) {
             id
             firebaseId
             username
@@ -196,10 +196,10 @@ function UserDashboard(props: Props) {
 
     // NOTE: OSM user does not have username stored
     const userName = useMemo(() => {
-        if (isDefined(userStats) && isDefined(userStats.contributorUser)) {
-            return isFalsyString(userStats.contributorUser.username)
-                ? userStats.contributorUser.firebaseId
-                : userStats.contributorUser.username;
+        if (isDefined(userStats) && isDefined(userStats.contributorUserByFirebaseId)) {
+            return isFalsyString(userStats.contributorUserByFirebaseId.username)
+                ? userStats.contributorUserByFirebaseId.firebaseId
+                : userStats.contributorUserByFirebaseId.username;
         }
 
         return null;

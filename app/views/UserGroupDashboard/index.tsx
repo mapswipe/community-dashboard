@@ -29,7 +29,7 @@ import {
     UserGroupStatsQueryVariables,
     UserMembershipsExportQuery,
     UserMembershipsExportQueryVariables,
-} from '#generated/types';
+} from '#generated/types/graphql';
 import useUrlState from '#hooks/useUrlState';
 import { defaultPagePerItemOptions } from '#utils/common';
 import StatsBoard from '#views/StatsBoard';

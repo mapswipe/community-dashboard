@@ -59,6 +59,7 @@
         "@graphql-codegen/introspection": "^4.0.3",
         "@graphql-codegen/typescript": "^1.23.0",
         "@graphql-codegen/typescript-operations": "^4.2.0",
+        "@graphql-typed-document-node/core": "^3.2.0",
         "@julr/vite-plugin-validate-env": "git+https://github.com/toggle-corp/vite-plugin-validate-env#v2.2.0-tc.1",
         "@types/d3-scale": "^4.0.2",
         "@types/leaflet": "^1.7.11",

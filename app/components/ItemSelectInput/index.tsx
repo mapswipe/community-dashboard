@@ -24,7 +24,7 @@ import {
     UserGroupOptionsQueryVariables,
     UserOptionsQuery,
     UserOptionsQueryVariables,
-} from '#generated/types';
+} from '#generated/types/graphql';
 import useDebouncedValue from '#hooks/useDebouncedValue';
 
 import styles from './styles.module.css';

@@ -44,7 +44,7 @@ import {
     OrganizationSwipeStatsType,
     ProjectTypeAreaStatsType,
     ProjectTypeSwipeStatsType,
-} from '#generated/types';
+} from '#generated/types/graphql';
 // import { formatDuration, intervalToDuration } from 'date-fns';
 import useDocumentSize from '#hooks/useDocumentSize';
 import areaSvg from '#resources/icons/area.svg';
