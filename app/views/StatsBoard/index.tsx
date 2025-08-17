@@ -48,8 +48,11 @@ import {
 // import { formatDuration, intervalToDuration } from 'date-fns';
 import useDocumentSize from '#hooks/useDocumentSize';
 import areaSvg from '#resources/icons/area.svg';
+import completenessSvg from '#resources/icons/completeness.svg';
 import featureSvg from '#resources/icons/feature.svg';
 import sceneSvg from '#resources/icons/scene.svg';
+import streetSvg from '#resources/icons/street.svg';
+import validateImgSvg from '#resources/icons/validate-image.svg';
 import { mergeItems } from '#utils/common';
 import {
     formatDate,
@@ -72,6 +75,7 @@ const VALIDATE = 'VALIDATE';
 const COMPARE = 'COMPARE';
 const COMPLETENESS = 'COMPLETENESS';
 const VALIDATE_IMAGE = 'VALIDATE_IMAGE';
+const STREET = 'STREET';
 
 const projectTypes: Record<string, { color: string, name: string }> = {
     [UNKNOWN]: {
@@ -96,6 +100,10 @@ const projectTypes: Record<string, { color: string, name: string }> = {
     },
     [VALIDATE_IMAGE]: {
         color: '#a1b963',
+        name: 'Validate Image',
+    },
+    [STREET]: {
+        color: '#c2afc3',
         name: 'Validate Image',
     },
 };
@@ -432,6 +440,18 @@ function StatsBoard(props: Props) {
         (project) => project.projectType === VALIDATE,
     )?.totalArea;
     */
+    const validateImageTotalArea = areaSwipedByProjectType?.find(
+        (project) => project.projectType === VALIDATE_IMAGE,
+    )?.totalArea;
+
+    const streetTotalArea = areaSwipedByProjectType?.find(
+        // TODO: Change the type to street
+        (project) => project.projectType === COMPLETENESS,
+    )?.totalArea;
+
+    const completenessTotalArea = areaSwipedByProjectType?.find(
+        (project) => project.projectType === COMPLETENESS,
+    )?.totalArea;
 
     const findTotalSwipes = swipeByProjectType?.find(
         (project) => project.projectType === FIND,
@@ -443,6 +463,19 @@ function StatsBoard(props: Props) {
 
     const validateTotalSwipes = swipeByProjectType?.find(
         (project) => project.projectType === VALIDATE,
+    )?.totalSwipes;
+
+    const validateImageTotalSwipes = swipeByProjectType?.find(
+        (project) => project.projectType === VALIDATE_IMAGE,
+    )?.totalSwipes;
+
+    const streetTotalSwipes = swipeByProjectType?.find(
+        // TODO: Change the type to street
+        (project) => project.projectType === COMPLETENESS,
+    )?.totalSwipes;
+
+    const completenessTotalSwipes = swipeByProjectType?.find(
+        (project) => project.projectType === COMPLETENESS,
     )?.totalSwipes;
 
     const organizationColors = scaleOrdinal<string, string | undefined>()
@@ -693,6 +726,103 @@ function StatsBoard(props: Props) {
                             </div>
                         )}
                         subHeading="Compare"
+                        variant="stat"
+                    />
+                    <InformationCard
+                        icon={(
+                            <img
+                                src={completenessSvg}
+                                alt="completeness icon"
+                            />
+                        )}
+                        value={(
+                            <>
+                                <NumberOutput
+                                    className={styles.numberOutput}
+                                    value={completenessTotalSwipes}
+                                    normal
+                                    invalidText={0}
+                                />
+                                <NumberOutput
+                                    className={styles.areaOutput}
+                                    value={completenessTotalArea}
+                                    normal
+                                    invalidText=""
+                                    unit="Sq. Km."
+                                />
+                            </>
+                        )}
+                        label={(
+                            <div className={styles.infoLabel}>
+                                Completeness
+                            </div>
+                        )}
+                        subHeading="Completeness"
+                        variant="stat"
+                    />
+                    <InformationCard
+                        icon={(
+                            <img
+                                src={streetSvg}
+                                alt="street icon"
+                            />
+                        )}
+                        value={(
+                            <>
+                                <NumberOutput
+                                    className={styles.numberOutput}
+                                    value={streetTotalSwipes}
+                                    normal
+                                    invalidText={0}
+                                />
+                                <NumberOutput
+                                    className={styles.areaOutput}
+                                    value={streetTotalArea}
+                                    normal
+                                    invalidText=""
+                                    unit="Sq. Km."
+                                />
+                            </>
+                        )}
+                        label={(
+                            <div className={styles.infoLabel}>
+                                Streets Covered
+                            </div>
+                        )}
+                        subHeading="Street"
+                        variant="stat"
+                    />
+                    <InformationCard
+                        icon={(
+                            // eslint-disable-next-line jsx-a11y/img-redundant-alt
+                            <img
+                                src={validateImgSvg}
+                                alt="validate image icon"
+                            />
+                        )}
+                        value={(
+                            <>
+                                <NumberOutput
+                                    className={styles.numberOutput}
+                                    value={validateImageTotalSwipes}
+                                    normal
+                                    invalidText={0}
+                                />
+                                <NumberOutput
+                                    className={styles.areaOutput}
+                                    value={validateImageTotalArea}
+                                    normal
+                                    invalidText=""
+                                    unit="Sq. Km."
+                                />
+                            </>
+                        )}
+                        label={(
+                            <div className={styles.infoLabel}>
+                                Images Validated
+                            </div>
+                        )}
+                        subHeading="Validate Image"
                         variant="stat"
                     />
                 </div>

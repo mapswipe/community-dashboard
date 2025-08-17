@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
     IoLogoGithub,
     IoLogoTwitter,
@@ -10,6 +11,11 @@ import iosSvg from '#resources/icons/ios.svg';
 import styles from './styles.module.css';
 
 function Footer() {
+    const currentYear = useMemo(() => {
+        const a = new Date();
+        return a.getFullYear();
+    }, []);
+
     return (
         <div className={styles.footer}>
             <div className={styles.links}>
@@ -72,7 +78,7 @@ function Footer() {
                 <span
                     className={styles.link}
                 >
-                    Copyright © 2022 MapSwipe
+                    {`Copyright © ${currentYear} MapSwipe`}
                 </span>
             </div>
         </div>
