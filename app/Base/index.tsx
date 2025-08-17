@@ -2,6 +2,7 @@ import {
     useMemo,
     useState,
 } from 'react';
+import ReactGA from 'react-ga';
 import { BrowserRouter } from 'react-router';
 import {
     ApolloClient,
@@ -17,6 +18,10 @@ import Navbar from '#base/components/Navbar';
 import PreloadMessage from '#base/components/PreloadMessage';
 import Routes from '#base/components/Routes';
 import apolloConfig from '#base/configs/apollo';
+import {
+    gaConfig,
+    trackingId,
+} from '#base/configs/googleAnalytics';
 import sentryConfig from '#base/configs/sentry';
 import {
     NavbarContext,
@@ -27,6 +32,13 @@ import styles from './styles.module.css';
 
 if (sentryConfig) {
     init(sentryConfig);
+}
+
+if (trackingId) {
+    ReactGA.initialize(trackingId, gaConfig);
+    const page = window.location.pathname;
+    ReactGA.set({ page });
+    ReactGA.pageview(page);
 }
 
 const apolloClient = new ApolloClient(apolloConfig);

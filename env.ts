@@ -33,7 +33,7 @@ export default defineConfig({
             }
             return value as ('production' | 'staging' | 'testing' | 'ci' | `alpha-${number}` | 'development' | 'APP_ENVIRONMENT_PLACEHOLDER');
         },
-
+        APP_GA_TRACKING_ID: Schema.string.optional(),
         APP_GRAPHQL_CODEGEN_ENDPOINT: Schema.string(),
     },
 });

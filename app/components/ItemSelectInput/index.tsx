@@ -156,8 +156,7 @@ function Option(props: OptionProps) {
     );
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
-export function titleSelector(item: SearchItemType) {
+function titleSelector(item: SearchItemType) {
     return item.name;
 }
 

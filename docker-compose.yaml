@@ -15,6 +15,7 @@ services:
       # TODO: Make the DSN env variable optional in env
       APP_SENTRY_DSN: ${APP_SENTRY_DSN:-}
       APP_SENTRY_TRACES_SAMPLE_RATE: ${APP_SENTRY_TRACES_SAMPLE_RATE:-}
+      APP_GA_TRACKING_ID: ${APP_GA_TRACKING_ID:-}
     env_file:
       - ../.env
     volumes:

@@ -440,10 +440,6 @@ function StatsBoard(props: Props) {
         (project) => project.projectType === VALIDATE,
     )?.totalArea;
     */
-    const validateImageTotalArea = areaSwipedByProjectType?.find(
-        (project) => project.projectType === VALIDATE_IMAGE,
-    )?.totalArea;
-
     const streetTotalArea = areaSwipedByProjectType?.find(
         // TODO: Change the type to street
         (project) => project.projectType === COMPLETENESS,
@@ -801,21 +797,12 @@ function StatsBoard(props: Props) {
                             />
                         )}
                         value={(
-                            <>
-                                <NumberOutput
-                                    className={styles.numberOutput}
-                                    value={validateImageTotalSwipes}
-                                    normal
-                                    invalidText={0}
-                                />
-                                <NumberOutput
-                                    className={styles.areaOutput}
-                                    value={validateImageTotalArea}
-                                    normal
-                                    invalidText=""
-                                    unit="Sq. Km."
-                                />
-                            </>
+                            <NumberOutput
+                                className={styles.numberOutput}
+                                value={validateImageTotalSwipes}
+                                normal
+                                invalidText={0}
+                            />
                         )}
                         label={(
                             <div className={styles.infoLabel}>

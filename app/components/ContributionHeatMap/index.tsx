@@ -1,3 +1,4 @@
+// NOTE: import-sort disabled — Leaflet must be imported in this order to prevent overwriting issues
 // eslint-disable-next-line simple-import-sort/imports
 import {
     useEffect,

@@ -5,8 +5,7 @@ LABEL maintainer="Mapswipe Dev"
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends git \
     && rm -rf /var/lib/apt/lists/* \
-    # NOTE: yarn > 1.22.19 breaks yarn-install invoked by pnpm
-    && npm install -g pnpm@10.6.1 yarn@1.22.19 --force \
+    && npm install -g pnpm@10.6.1 --force \
     && git config --global --add safe.directory /code
 
 WORKDIR /code
@@ -23,10 +22,11 @@ COPY . /code/
 
 # Build variables (Requires backend pulled)
 
-ENV APP_GRAPHQL_CODEGEN_ENDPOINT=./backend/schema.graphql
 ENV APP_GRAPHQL_ENDPOINT=http://localhost:8000/graphql/
 ENV APP_ENVIRONMENT=development
 ENV APP_SENTRY_DSN=temp
+ENV APP_GA_TRACKING_ID=temp
+ENV APP_GRAPHQL_CODEGEN_ENDPOINT=./backend/schema.graphql
 
 RUN pnpm generate:type && WEB_APP_SERVE_ENABLED=true pnpm build
 
