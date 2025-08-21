@@ -23,6 +23,7 @@ COPY . /code/
 # Build variables (Requires backend pulled)
 
 ENV APP_GRAPHQL_ENDPOINT=http://localhost:8000/graphql/
+ENV APP_BACKEND_ENDPOINT=http://localhost:8000/
 ENV APP_ENVIRONMENT=development
 ENV APP_SENTRY_DSN=temp
 ENV APP_GA_TRACKING_ID=temp

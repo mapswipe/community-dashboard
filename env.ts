@@ -19,6 +19,7 @@ export default defineConfig({
     schema: {
         // NOTE: These are the dynamic env variables
         APP_GRAPHQL_ENDPOINT: Schema.string({ format: 'url', protocol: true, tld: false }),
+        APP_BACKEND_ENDPOINT: Schema.string({ format: 'url', protocol: true, tld: false }),
         APP_SENTRY_DSN: Schema.string.optional(),
         APP_ENVIRONMENT: (key: string, value: string) => {
             // NOTE: APP_ENVIRONMENT_PLACEHOLDER is meant to be used with image builds

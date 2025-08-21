@@ -8,6 +8,7 @@ interface ImportMetaEnv extends ImportMetaEnvAugmented {
     // The custom environment variables that are passed through the vite
     APP_TITLE: string;
     APP_GRAPHQL_ENDPOINT: string;
+    APP_BACKEND_ENDPOINT: string;
     APP_SENTRY_DSN: string;
     APP_SENTRY_TRACES_SAMPLE_RATE: string;
     APP_ENVIRONMENT: string;

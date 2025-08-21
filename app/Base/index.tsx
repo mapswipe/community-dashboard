@@ -1,4 +1,5 @@
 import {
+    useEffect,
     useMemo,
     useState,
 } from 'react';
@@ -42,8 +43,24 @@ if (trackingId) {
 }
 
 const apolloClient = new ApolloClient(apolloConfig);
+const BACKEND_ENDPOINT = import.meta.env.APP_BACKEND_ENDPOINT;
 
 function Base() {
+    useEffect(() => {
+        async function healthCheck() {
+            try {
+                await fetch(
+                    `${BACKEND_ENDPOINT}health-check/?format=json`,
+                    { credentials: 'include' },
+                );
+            } catch (ex) {
+                // eslint-disable-next-line no-console
+                console.error('Error getting health check', ex);
+            }
+        }
+        healthCheck();
+    }, []);
+
     const [navbarVisibility, setNavbarVisibility] = useState(true);
 
     const navbarContext: NavbarContextInterface = useMemo(

@@ -45,3 +45,4 @@ jobs:
           APP_SENTRY_DSN: 'https://random-token@sentry.io'
           APP_GRAPHQL_CODEGEN_ENDPOINT: 'https://random-domain.com/graphql/'
           APP_GRAPHQL_ENDPOINT: 'https://random-domain.com/graphql/'
+          APP_BACKEND_ENDPOINT: 'https://random-domain.com/'
