@@ -1,11 +1,21 @@
-import React from 'react';
-import { IoLogoTwitter, IoLogoGithub, IoMail } from 'react-icons/io5';
-import iosSvg from '#resources/icons/ios.svg';
-import androidSvg from '#resources/icons/android.svg';
+import { useMemo } from 'react';
+import {
+    IoLogoGithub,
+    IoLogoTwitter,
+    IoMail,
+} from 'react-icons/io5';
 
-import styles from './styles.css';
+import androidSvg from '#resources/icons/android.svg';
+import iosSvg from '#resources/icons/ios.svg';
+
+import styles from './styles.module.css';
 
 function Footer() {
+    const currentYear = useMemo(() => {
+        const a = new Date();
+        return a.getFullYear();
+    }, []);
+
     return (
         <div className={styles.footer}>
             <div className={styles.links}>
@@ -68,7 +78,7 @@ function Footer() {
                 <span
                     className={styles.link}
                 >
-                    Copyright © 2022 MapSwipe
+                    {`Copyright © ${currentYear} MapSwipe`}
                 </span>
             </div>
         </div>

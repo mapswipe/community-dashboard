@@ -1,11 +1,35 @@
-import { ApolloClientOptions, NormalizedCacheObject, InMemoryCache, ApolloLink as ApolloLinkFromClient, HttpLink } from '@apollo/client';
+import {
+    ApolloClientOptions,
+    ApolloLink as ApolloLinkFromClient,
+    HttpLink,
+    InMemoryCache,
+    NormalizedCacheObject,
+} from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 
-const GRAPHQL_ENDPOINT = process.env.REACT_APP_GRAPHQL_ENDPOINT as string;
+function getCookie(): string | null {
+    const match = document.cookie.match(/(?:^|;\s*)(mapswipe[^=]*csrftoken)=([^;]+)/i);
+    return match ? decodeURIComponent(match[2]) : null;
+}
 
-const link = new HttpLink({
-    uri: GRAPHQL_ENDPOINT,
-    credentials: 'omit',
-}) as unknown as ApolloLinkFromClient;
+const GRAPHQL_ENDPOINT = import.meta.env.APP_GRAPHQL_ENDPOINT as string;
+
+const csrfMiddleware = setContext((_, { headers }) => {
+    const csrfToken = getCookie();
+    return {
+        headers: {
+            ...headers,
+            'X-CSRFToken': csrfToken ?? '',
+        },
+    };
+});
+
+const link = csrfMiddleware.concat(
+    new HttpLink({
+        uri: GRAPHQL_ENDPOINT,
+        credentials: 'include',
+    }) as unknown as ApolloLinkFromClient,
+) as ApolloLinkFromClient;
 
 /*
 const link: ApolloLinkFromClient = ApolloLink.from([

@@ -1,7 +1,7 @@
 import React from 'react';
 import { _cs } from '@togglecorp/fujs';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 export interface Props<N> extends Omit<React.HTMLProps<HTMLButtonElement>, 'ref' | 'onClick' | 'name'>{
     className?: string;
@@ -42,6 +42,7 @@ function RawButton<N>(props: Props<N>) {
             disabled={disabled}
             onClick={onClick ? handleClick : undefined}
             name={typeof name === 'string' ? name : undefined}
+            // eslint-disable-next-line react/jsx-props-no-spreading
             {...otherProps}
         >
             { children }

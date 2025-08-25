@@ -1,9 +1,10 @@
 import React, { memo } from 'react';
 import { _cs } from '@togglecorp/fujs';
 
-import Icons from '../Icons';
 import Actions from '../Actions';
-import styles from './styles.css';
+import Icons from '../Icons';
+
+import styles from './styles.module.css';
 
 export interface Props {
     children?: React.ReactNode;

@@ -14,7 +14,7 @@
     }
 
     &.medium {
-        --color: var(--color-brand);
+        --color: var(--color-primary);
         font-size: var(--font-size-medium);
     }
 

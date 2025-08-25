@@ -1,27 +1,33 @@
-import React, { useState, useMemo, useCallback } from 'react';
-// import { useLocation } from 'react-router-dom';
+import React, {
+    useCallback,
+    useMemo,
+    useState,
+} from 'react';
 import {
     IoCheckmark,
-    IoPerson,
     IoPeople,
+    IoPerson,
     IoSearch,
 } from 'react-icons/io5';
-import { isFalsyString, _cs } from '@togglecorp/fujs';
 import {
-    useQuery,
     gql,
+    useQuery,
 } from '@apollo/client';
 import {
-    UserOptionsQuery,
-    UserOptionsQueryVariables,
+    _cs,
+    isFalsyString,
+} from '@togglecorp/fujs';
+
+import SearchSelectInput, { SearchSelectInputProps } from '#components/SelectInput/SearchSelectInput';
+import {
     UserGroupOptionsQuery,
     UserGroupOptionsQueryVariables,
-} from '#generated/types';
-import SearchSelectInput, {
-    SearchSelectInputProps,
-} from '#components/SelectInput/SearchSelectInput';
+    UserOptionsQuery,
+    UserOptionsQueryVariables,
+} from '#generated/types/graphql';
 import useDebouncedValue from '#hooks/useDebouncedValue';
-import styles from './styles.css';
+
+import styles from './styles.module.css';
 
 export type SearchItemType = {
     id: string;
@@ -34,31 +40,51 @@ const LIMIT = 5;
 
 const USERS = gql`
 query UserOptions($search: String, $offset: Int!, $limit: Int!) {
-    users(filters: { search: $search }, pagination: { limit: $limit, offset: $offset }) {
-        items {
+    contributorUsers(
+        filters: {
+            username: { iContains: $search }
+        },
+        pagination: {
+            limit: $limit,
+            offset: $offset
+        }
+    ) {
+        results {
             id
-            userId
+            firebaseId
             username
         }
-        count
-        offset
-        limit
+        pageInfo {
+            limit
+            offset
+        }
+        totalCount
     }
 }
 `;
 
 const USER_GROUPS = gql`
 query UserGroupOptions($search: String, $offset: Int!, $limit: Int!) {
-    userGroups(filters: { search: $search }, pagination: { limit: $limit, offset: $offset }) {
-        items {
+    contributorUserGroups(
+        filters: {
+            name: $search
+        }
+        pagination: {
+            limit: $limit,
+            offset: $offset
+        }
+    ) {
+        results {
             id
             isArchived
-            userGroupId
+            clientId
             name
         }
-        count
-        offset
-        limit
+        totalCount
+        pageInfo {
+            limit
+            offset
+        }
     }
 }
 `;
@@ -130,7 +156,7 @@ function Option(props: OptionProps) {
     );
 }
 
-export function titleSelector(item: SearchItemType) {
+function titleSelector(item: SearchItemType) {
     return item.name;
 }
 
@@ -178,25 +204,26 @@ function ItemSelectInput<Name extends string>(props: ItemSelectInputProps<Name>)
     );
 
     const loading = userDataLoading || userGroupDataLoading;
-    const count = (userData?.users.count ?? 0) + (userGroupData?.userGroups.count ?? 0);
+    const count = (userData?.contributorUsers.totalCount ?? 0)
+        + (userGroupData?.contributorUserGroups.totalCount ?? 0);
     const usersData = useMemo(
-        () => userData?.users.items,
-        [userData?.users.items],
+        () => userData?.contributorUsers.results,
+        [userData?.contributorUsers.results],
     );
     const userGroupsData = useMemo(
-        () => userGroupData?.userGroups.items,
-        [userGroupData?.userGroups.items],
+        () => userGroupData?.contributorUserGroups.results,
+        [userGroupData?.contributorUserGroups.results],
     );
 
     const data: SearchItemType[] = useMemo(
         () => ([
             ...(usersData?.map((user) => ({
-                id: user.userId,
-                name: (isFalsyString(user.username) ? user.userId : user.username),
+                id: user.firebaseId,
+                name: (isFalsyString(user.username) ? user.firebaseId : user.username),
                 type: 'user' as const,
             })) ?? []),
             ...(userGroupsData?.map((userGroup) => ({
-                id: userGroup.userGroupId,
+                id: userGroup.id,
                 name: userGroup.name ?? 'Unknown',
                 type: 'user-group' as const,
                 isArchived: userGroup.isArchived ?? false,
@@ -227,64 +254,63 @@ function ItemSelectInput<Name extends string>(props: ItemSelectInputProps<Name>)
         [],
     );
 
-    const handleShowMoreClick = useCallback(
-        () => {
-            fetchMoreUser({
-                variables: {
-                    offset: (userData?.users.offset ?? 0) + LIMIT,
-                },
-                updateQuery: (previousResult, { fetchMoreResult }) => {
-                    const oldUsers = previousResult;
-                    const newUsers = fetchMoreResult;
+    const handleShowMoreClick = useCallback(() => {
+        fetchMoreUser({
+            variables: {
+                offset: (userData?.contributorUsers.pageInfo.offset ?? 0) + LIMIT,
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+                const oldUsers = previousResult;
+                const newUsers = fetchMoreResult;
 
-                    if (!newUsers) {
-                        return previousResult;
-                    }
+                if (!newUsers) {
+                    return previousResult;
+                }
 
-                    return ({
-                        users: {
-                            ...newUsers.users,
-                            items: [
-                                ...oldUsers.users?.items ?? [],
-                                ...newUsers.users?.items ?? [],
-                            ],
-                        },
-                    });
-                },
-            });
-            fetchMoreUserGroup({
-                variables: {
-                    offset: (userGroupData?.userGroups.offset ?? 0) + LIMIT,
-                },
-                updateQuery: (previousResult, { fetchMoreResult }) => {
-                    const oldUserGroups = previousResult;
-                    const newUserGroups = fetchMoreResult;
+                return ({
+                    contributorUsers: {
+                        ...newUsers.contributorUsers,
+                        results: [
+                            ...oldUsers.contributorUsers?.results ?? [],
+                            ...newUsers.contributorUsers?.results ?? [],
+                        ],
+                    },
+                });
+            },
+        });
+        fetchMoreUserGroup({
+            variables: {
+                offset: (userGroupData?.contributorUserGroups.pageInfo.offset ?? 0) + LIMIT,
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+                const oldUserGroups = previousResult;
+                const newUserGroups = fetchMoreResult;
 
-                    if (!newUserGroups) {
-                        return previousResult;
-                    }
+                if (!newUserGroups) {
+                    return previousResult;
+                }
 
-                    return ({
-                        userGroups: {
-                            ...newUserGroups.userGroups,
-                            items: [
-                                ...oldUserGroups.userGroups.items ?? [],
-                                ...newUserGroups.userGroups.items ?? [],
-                            ],
-                        },
-                    });
-                },
-            });
-        }, [
-            fetchMoreUser,
-            fetchMoreUserGroup,
-            userData?.users.offset,
-            userGroupData?.userGroups.offset,
-        ],
-    );
+                return ({
+                    contributorUserGroups: {
+                        ...newUserGroups.contributorUserGroups,
+                        results: [
+                            ...oldUserGroups.contributorUserGroups.results ?? [],
+                            ...newUserGroups.contributorUserGroups.results ?? [],
+                        ],
+                    },
+                });
+            },
+        });
+    }, [
+        fetchMoreUser,
+        fetchMoreUserGroup,
+        userData?.contributorUsers.pageInfo.offset,
+        userGroupData?.contributorUserGroups.pageInfo.offset,
+    ]);
 
     return (
         <SearchSelectInput
+            // eslint-disable-next-line react/jsx-props-no-spreading
             {...otherProps}
             className={className}
             name="item-select-input"

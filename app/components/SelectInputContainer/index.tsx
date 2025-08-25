@@ -1,25 +1,32 @@
-import React, { useCallback, useRef } from 'react';
+import React, {
+    useCallback,
+    useRef,
+} from 'react';
+import {
+    IoIosArrowDown,
+    IoIosArrowUp,
+    IoMdClose,
+} from 'react-icons/io';
 import {
     _cs,
     isFalsyString,
 } from '@togglecorp/fujs';
-import { IoIosArrowDown, IoIosArrowUp, IoMdClose } from 'react-icons/io';
 
+import Button from '#components/Button';
 import GenericOption, {
     ContentBaseProps,
     OptionKey,
 } from '#components/GenericOption';
-import Popup from '#components/Popup';
 import InputContainer, { Props as InputContainerProps } from '#components/InputContainer';
+import Popup from '#components/Popup';
 import RawInput from '#components/RawInput';
-import Button from '#components/Button';
-import List from '../List';
-
 import useBlurEffect from '#hooks/useBlurEffect';
 import useKeyboard from '#hooks/useKeyboard';
 
+import List from '../List';
 import EmptyOptions from './EmptyOptions';
-import styles from './styles.css';
+
+import styles from './styles.module.css';
 
 interface GroupProps {
     title: string;
@@ -101,7 +108,7 @@ const emptyList: unknown[] = [];
 function SelectInputContainer<
     OK extends OptionKey,
     N extends string,
-    O extends object, // eslint-disable-line
+    O extends object,
     P extends ContentBaseProps
 >(
     props: SelectInputContainerProps<OK, N, O, P, never>,
@@ -172,11 +179,11 @@ function SelectInputContainer<
     );
 
     const handleSearchInputChange = useCallback(
-        (value) => {
+        (value: string | undefined) => {
             if (!dropdownShown) {
                 onDropdownShownChange(true);
             }
-            onSearchTextChange(value);
+            onSearchTextChange(value ?? '');
         },
         [
             dropdownShown,
@@ -247,7 +254,7 @@ function SelectInputContainer<
     );
 
     const optionListRendererParams = useCallback(
-        (key, option) => ({
+        (key: OK, option: O) => ({
             contentRendererParam: optionRendererParams,
             option,
             optionKey: key,

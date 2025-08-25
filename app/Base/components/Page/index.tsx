@@ -1,9 +1,9 @@
 import React from 'react';
 
-import PageTitle from '#base/components/PageTitle';
 import ErrorBoundary from '#base/components/ErrorBoundary';
+import PageTitle from '#base/components/PageTitle';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 type Visibility = 'is-authenticated' | 'is-not-authenticated' | 'is-anything';
 
@@ -37,7 +37,9 @@ function Page<T extends { className?: string }>(props: Props<T>) {
             <ErrorBoundary>
                 <Comp
                     className={styles.page}
+                    // eslint-disable-next-line react/jsx-props-no-spreading
                     {...componentProps}
+                    // eslint-disable-next-line react/jsx-props-no-spreading
                     {...overrideProps}
                 />
             </ErrorBoundary>

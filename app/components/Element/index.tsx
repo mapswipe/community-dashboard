@@ -1,11 +1,9 @@
 import React, { memo } from 'react';
 import { _cs } from '@togglecorp/fujs';
 
-import ElementFragments, {
-    Props as ElementFragmentProps,
-} from '../ElementFragments';
+import ElementFragments, { Props as ElementFragmentProps } from '../ElementFragments';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 export interface Props extends ElementFragmentProps {
     className?: string;
@@ -31,6 +29,7 @@ function Element(props: Props) {
             ref={elementRef}
         >
             <ElementFragments
+                // eslint-disable-next-line react/jsx-props-no-spreading
                 {...elementFragmentProps}
             />
         </div>

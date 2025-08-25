@@ -48,6 +48,7 @@ export function getTimestamps(
     ];
 
     let increment = 1;
+    // eslint-disable-next-line no-constant-condition
     while (true) {
         const myDate = new Date(sanitizedStartDate);
         if (resolution === 'year') {

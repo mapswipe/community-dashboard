@@ -1,11 +1,10 @@
 import React, { memo } from 'react';
 import { _cs } from '@togglecorp/fujs';
 
+import type { Props as NumberOutputProps } from '../NumberOutput';
 import NumberOutput from '../NumberOutput';
 
-import type { Props as NumberOutputProps } from '../NumberOutput';
-
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 interface BaseProps {
     className?: string;
@@ -47,7 +46,8 @@ function TextOutput(props: Props) {
             <NumberOutput
                 // eslint-disable-next-line react/destructuring-assignment
                 value={props.value}
-                // eslint-disable-next-line react/destructuring-assignment
+                // eslint-disable-next-line max-len
+                // eslint-disable-next-line react/jsx-props-no-spreading, react/destructuring-assignment
                 {...props.valueProps}
             />
         );

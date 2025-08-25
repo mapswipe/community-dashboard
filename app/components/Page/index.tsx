@@ -1,25 +1,24 @@
 import React from 'react';
+import { IoInformationCircleOutline } from 'react-icons/io5';
 import {
     _cs,
     isDefined,
 } from '@togglecorp/fujs';
-import { IoInformationCircleOutline } from 'react-icons/io5';
 
+import Footer from '#components/Footer';
 import Header from '#components/Header';
 import InformationCard from '#components/InformationCard';
 import NumberOutput from '#components/NumberOutput';
-import TextOutput from '#components/TextOutput';
-import Footer from '#components/Footer';
 import PendingMessage from '#components/PendingMessage';
-
-import dashboardHeaderSvg from '#resources/img/dashboard.svg';
-import userSvg from '#resources/icons/user.svg';
+import TextOutput from '#components/TextOutput';
 import groupSvg from '#resources/icons/group.svg';
 import swipeSvg from '#resources/icons/swipe.svg';
 import timeSvg from '#resources/icons/time.svg';
-
+import userSvg from '#resources/icons/user.svg';
+import dashboardHeaderSvg from '#resources/img/dashboard.svg';
 import { formatTimeDuration } from '#utils/temporal';
-import styles from './styles.css';
+
+import styles from './styles.module.css';
 
 interface InfoStatCardProps {
     iconUrl?: string;

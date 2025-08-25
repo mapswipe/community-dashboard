@@ -1,19 +1,30 @@
-import React, { useMemo, useEffect } from 'react';
-import L, { HeatLatLngTuple, HeatMapOptions } from 'leaflet';
-import 'leaflet.heat';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
-import { GestureHandling } from 'leaflet-gesture-handling';
+// NOTE: import-sort disabled — Leaflet must be imported in this order to prevent overwriting issues
+// eslint-disable-next-line simple-import-sort/imports
+import {
+    useEffect,
+    useMemo,
+} from 'react';
+import {
+    MapContainer,
+    TileLayer,
+    useMap,
+} from 'react-leaflet';
 import { isDefined } from '@togglecorp/fujs';
 import bbox from '@turf/bbox';
+import L, {
+    HeatLatLngTuple,
+    HeatMapOptions,
+} from 'leaflet';
 
+import { GestureHandling } from 'leaflet-gesture-handling';
+
+import 'leaflet.heat';
 import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css';
 import 'leaflet/dist/leaflet.css';
 
-import {
-    MapContributionStatsType,
-} from '#generated/types';
+import { MapContributionStatsType } from '#generated/types/graphql';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 L.Map.addInitHook('addHandler', 'gestureHandling', GestureHandling);
 

@@ -1,20 +1,35 @@
-import React, { useState, useMemo } from 'react';
-import { Router } from 'react-router-dom';
-import { init, ErrorBoundary } from '@sentry/react';
-import { _cs } from '@togglecorp/fujs';
-import { ApolloClient, ApolloProvider } from '@apollo/client';
+import {
+    useEffect,
+    useMemo,
+    useState,
+} from 'react';
 import ReactGA from 'react-ga';
+import { BrowserRouter } from 'react-router';
+import {
+    ApolloClient,
+    ApolloProvider,
+} from '@apollo/client';
+import {
+    ErrorBoundary,
+    init,
+} from '@sentry/react';
+import { _cs } from '@togglecorp/fujs';
 
-import PreloadMessage from '#base/components/PreloadMessage';
-import browserHistory from '#base/configs/history';
-import sentryConfig from '#base/configs/sentry';
-import { NavbarContext, NavbarContextInterface } from '#base/context/NavbarContext';
 import Navbar from '#base/components/Navbar';
+import PreloadMessage from '#base/components/PreloadMessage';
 import Routes from '#base/components/Routes';
 import apolloConfig from '#base/configs/apollo';
-import { trackingId, gaConfig } from '#base/configs/googleAnalytics';
+import {
+    gaConfig,
+    trackingId,
+} from '#base/configs/googleAnalytics';
+import sentryConfig from '#base/configs/sentry';
+import {
+    NavbarContext,
+    NavbarContextInterface,
+} from '#base/context/NavbarContext';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 if (sentryConfig) {
     init(sentryConfig);
@@ -22,16 +37,30 @@ if (sentryConfig) {
 
 if (trackingId) {
     ReactGA.initialize(trackingId, gaConfig);
-    browserHistory.listen((location) => {
-        const page = location.pathname ?? window.location.pathname;
-        ReactGA.set({ page });
-        ReactGA.pageview(page);
-    });
+    const page = window.location.pathname;
+    ReactGA.set({ page });
+    ReactGA.pageview(page);
 }
 
 const apolloClient = new ApolloClient(apolloConfig);
+const BACKEND_ENDPOINT = import.meta.env.APP_BACKEND_ENDPOINT;
 
 function Base() {
+    useEffect(() => {
+        async function healthCheck() {
+            try {
+                await fetch(
+                    `${BACKEND_ENDPOINT}health-check/?format=json`,
+                    { credentials: 'include' },
+                );
+            } catch (ex) {
+                // eslint-disable-next-line no-console
+                console.error('Error getting health check', ex);
+            }
+        }
+        healthCheck();
+    }, []);
+
     const [navbarVisibility, setNavbarVisibility] = useState(true);
 
     const navbarContext: NavbarContextInterface = useMemo(
@@ -55,7 +84,7 @@ function Base() {
             >
                 <ApolloProvider client={apolloClient}>
                     <NavbarContext.Provider value={navbarContext}>
-                        <Router history={browserHistory}>
+                        <BrowserRouter>
                             <Navbar
                                 className={_cs(
                                     styles.navbar,
@@ -65,7 +94,7 @@ function Base() {
                             <Routes
                                 className={styles.view}
                             />
-                        </Router>
+                        </BrowserRouter>
                     </NavbarContext.Provider>
                 </ApolloProvider>
             </ErrorBoundary>

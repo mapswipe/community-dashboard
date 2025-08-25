@@ -1,26 +1,25 @@
 import React from 'react';
 import {
-    _cs,
-    isNotDefined,
-    isDefined,
-} from '@togglecorp/fujs';
-import {
-    IoTimeOutline,
-    IoChevronForward,
-    IoChevronBack,
     IoCalendarOutline,
+    IoChevronBack,
+    IoChevronForward,
+    IoTimeOutline,
 } from 'react-icons/io5';
+import {
+    _cs,
+    isDefined,
+    isNotDefined,
+} from '@togglecorp/fujs';
 
 import { getDateSafe } from '#utils/temporal';
 
+import useInputState from '../../hooks/useInputState';
 import Button from '../Button';
 import NumberInput from '../NumberInput';
 import SelectInput from '../SelectInput';
-import useInputState from '../../hooks/useInputState';
-
 import CalendarDate, { Props as CalendarDateProps } from './CalendarDate';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 const weekDayNames = [
     'Sunday',
@@ -235,14 +234,15 @@ function Calendar<P extends CalendarDateProps>(props: Props<P>) {
                         };
 
                         const combinedProps = {
-                            ...(rendererParams ? rendererParams(
-                                date.date, month, year,
-                            ) : undefined),
+                            ...(rendererParams
+                                ? rendererParams(date.date, month, year)
+                                : undefined),
                             ...defaultProps,
                         } as P;
 
                         const children = (
                             <DateRenderer
+                                // eslint-disable-next-line react/jsx-props-no-spreading
                                 {...combinedProps}
                             />
                         );

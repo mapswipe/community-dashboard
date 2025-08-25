@@ -70,10 +70,16 @@ p {
     --color-success: #53b391;
     --color-separator: rgba(0, 0, 0, 0.1);
     --color-shadow: rgba(0, 0, 0, 0.3);
+
     --color-scrollbar-foreground: rgba(0, 0, 0, .2);
     --color-scrollbar-background: rgba(0, 0, 0, .01);
 
     --color-input-background: rgba(14, 45, 80, 0.1);
+
+    --color-black: #000000;
+
+    --color-input-border: rgba(0, 0, 0, 0.1);
+    --color-active-input-border: var(--color-accent);
 
     --font-size-extra-small: 0.5rem;
     --font-size-small: 0.78rem;

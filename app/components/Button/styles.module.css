@@ -18,12 +18,12 @@
     }
 
     &.primary {
-        border-color: var(--primary-color);
-        color: var(--primary-color);
+        border-color: var(--color-primary);
+        color: var(--color-primary);
     }
     &.secondary {
-        border-color: var(--primary-accent);
-        color: var(--primary-accent);
+        border-color: var(--color-accent);
+        color: var(--color-accent);
     }
 
     &.transparent {

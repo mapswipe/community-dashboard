@@ -12,27 +12,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-
-      - uses: actions/setup-node@v4
         with:
-          node-version: '17.x'
-          cache: 'yarn'
+          submodules: true
 
-      - name: 🤞 Install dependencies 🧪
-        run: yarn install --frozen-lockfile --prefer-offline
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
-      - name: 🤞 Run Lint 🧪
-        run: yarn lint
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
 
-      - name: 🤞 Run Test 🧪
-        run: yarn test --passWithNoTests
+      - name: Install dependencies
+        run: pnpm install
 
-      - name: 🤞 Run Build 🧪
-        run: yarn build
+      - name: Generate typings
+        run: pnpm generate:type
         env:
-          REACT_APP_SENTRY_DSN: 'https://random-token@sentry.io'
-          REACT_APP_SENTRY_TRACES_SAMPLE_RATE: 0.2
-          REACT_APP_ENVIRONMENT: 'ci'
-          GRAPHQL_CODEGEN_ENDPOINT: 'https://random-domain.com/graphql/'
-          REACT_APP_GRAPHQL_ENDPOINT: 'https://random-domain.com/graphql/'
-          REACT_APP_MAPSWIPE_WEBSITE: 'https://random-website-domain.com'
+          APP_GRAPHQL_CODEGEN_ENDPOINT: './backend/schema.graphql'
+
+      - name: Lint CSS
+        run: pnpm lint:css
+
+      - name: Lint JS
+        run: pnpm lint:js
+
+      - name: Build
+        run: pnpm build
+        env:
+          APP_ENVIRONMENT: 'ci'
+          APP_SENTRY_DSN: 'https://random-token@sentry.io'
+          APP_GRAPHQL_CODEGEN_ENDPOINT: 'https://random-domain.com/graphql/'
+          APP_GRAPHQL_ENDPOINT: 'https://random-domain.com/graphql/'
+          APP_BACKEND_ENDPOINT: 'https://random-domain.com/'

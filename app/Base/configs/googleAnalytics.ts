@@ -1,7 +1,7 @@
 import { InitializeOptions } from 'react-ga';
-import { isDev } from './env';
 
-export const trackingId = process.env.REACT_APP_GA_TRACKING_ID;
+export const trackingId = import.meta.env.APP_GA_TRACKING_ID;
+const isDev = import.meta.env.APP_ENVIRONMENT === 'development';
 
 export const gaConfig: InitializeOptions = {
     debug: isDev,

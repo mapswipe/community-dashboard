@@ -1,107 +1,112 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { gql, useQuery, useLazyQuery } from '@apollo/client';
-import { encodeDate, isFalsyString } from '@togglecorp/fujs';
-import { useParams } from 'react-router-dom';
+import React, {
+    useCallback,
+    useMemo,
+    useState,
+} from 'react';
+import { useParams } from 'react-router';
+import {
+    gql,
+    useLazyQuery,
+    useQuery,
+} from '@apollo/client';
+import {
+    encodeDate,
+    isFalsyString,
+} from '@togglecorp/fujs';
 
-import StatsBoard from '#views/StatsBoard';
-
-import useUrlState from '#hooks/useUrlState';
 import Button from '#components/Button';
-import List from '#components/List';
-import MemberItem from '#components/MemberItem';
-import Heading from '#components/Heading';
-import Pager from '#components/Pager';
-import Page from '#components/Page';
 import { MapContributionType } from '#components/ContributionHeatMap';
 import { getThisYear } from '#components/DateRangeInput/predefinedDateRange';
-
+import Heading from '#components/Heading';
+import List from '#components/List';
+import MemberItem from '#components/MemberItem';
+import Page from '#components/Page';
+import Pager from '#components/Pager';
 import {
-    UserGroupStatsQuery,
-    UserGroupStatsQueryVariables,
     FilteredUserGroupStatsQuery,
     FilteredUserGroupStatsQueryVariables,
+    UserGroupStatsQuery,
+    UserGroupStatsQueryVariables,
     UserMembershipsExportQuery,
     UserMembershipsExportQueryVariables,
-} from '#generated/types';
+} from '#generated/types/graphql';
+import useUrlState from '#hooks/useUrlState';
 import { defaultPagePerItemOptions } from '#utils/common';
+import StatsBoard from '#views/StatsBoard';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 const EXPORT_LIMIT = 500;
 
 const USER_GROUP_STATS = gql`
-    query UserGroupStats($pk: ID!, $limit: Int!, $offset: Int!) {
-        userGroup(pk: $pk) {
-            id
-            userGroupId
-            name
-            description
-            userMemberships(pagination: { limit: $limit, offset: $offset }) {
-                count
-                items {
+query UserGroupStats($pk: ID!, $limit: Int!, $offset: Int!) {
+    contributorUserGroup(id: $pk) {
+        id
+        name
+        description
+        membersCount
+        userMemberships(pagination: {limit: $limit, offset: $offset}) {
+            totalCount
+            results {
+                id
+                isActive
+                totalSwipes
+                totalSwipeTime
+                totalMappingProjects
+                user {
                     id
-                    userId
+                    firebaseId
                     username
-                    isActive
-                    totalMappingProjects
-                    totalSwipeTime
-                    totalSwipes
                 }
-            }
-        }
-        userGroupStats(userGroupId: $pk) {
-            id
-            stats {
-                totalContributors
-                totalSwipes
-                totalSwipeTime
-            }
-            statsLatest {
-                totalContributors
-                totalSwipeTime
-                totalSwipes
             }
         }
     }
+    communityUserGroupStats(userGroupId: $pk) {
+        id
+        stats {
+            totalContributors
+            totalSwipes
+            totalSwipeTime
+        }
+        statsLatest {
+            totalContributors
+            totalSwipes
+            totalSwipeTime
+        }
+    }
+}
 `;
 
 const FILTERED_USER_GROUP_STATS = gql`
-    query FilteredUserGroupStats($pk: ID!, $fromDate: DateTime! $toDate: DateTime!) {
-        userGroupStats(userGroupId: $pk) {
+    query FilteredUserGroupStats($pk: ID!, $fromDate: Date! $toDate: Date!) {
+        communityUserGroupStats(userGroupId: $pk) {
             id
-            filteredStats(dateRange: { fromDate: $fromDate, toDate: $toDate}) {
-                userStats {
-                    totalMappingProjects
-                    totalSwipeTime
-                    totalSwipes
-                    username
-                    userId
-                }
-                contributionByGeo {
-                    geojson
-                    totalContribution
-                }
+            filteredStats(dateRange: {fromDate: $fromDate, toDate: $toDate}) {
                 areaSwipedByProjectType {
-                    totalArea
                     projectTypeDisplay
+                    totalArea
                     projectType
                 }
                 swipeByDate {
                     taskDate
                     totalSwipes
                 }
-                swipeTimeByDate {
-                    date
-                    totalSwipeTime
+                swipeByOrganizationName {
+                    totalSwipes
+                    organizationName
+                }
+                swipeByProjectGeo {
+                    totalContribution
+                    geojson
                 }
                 swipeByProjectType {
-                    projectType
+                    totalSwipes
                     projectTypeDisplay
-                    totalSwipes
+                    projectType
                 }
-                swipeByOrganizationName {
-                    organizationName
-                    totalSwipes
+                swipeTimeByDate {
+                    totalSwipeTime
+                    date
                 }
             }
         }
@@ -114,30 +119,34 @@ const USER_MEMBERSHIPS_EXPORT = gql`
         $limit: Int!,
         $offset: Int!,
     ) {
-        userGroup(pk: $pk) {
+        contributorUserGroup(id: $pk) {
             id
-            userMemberships(pagination: { limit: $limit, offset: $offset }) {
-                count
-                limit
-                offset
-                items {
+            name
+            description
+            membersCount
+            userMemberships(pagination: {limit: $limit, offset: $offset}) {
+                totalCount
+                results {
                     id
-                    userId
-                    username
                     isActive
-                    totalMappingProjects
-                    totalSwipeTime
                     totalSwipes
+                    totalSwipeTime
+                    totalMappingProjects
+                    user {
+                        id
+                        firebaseId
+                        username
+                    }
                 }
             }
         }
     }
 `;
 
-type UserGroupMember = NonNullable<NonNullable<NonNullable<UserGroupStatsQuery['userGroup']>['userMemberships']>['items']>[number];
+type UserGroupMember = NonNullable<NonNullable<NonNullable<UserGroupStatsQuery['contributorUserGroup']>['userMemberships']>['results']>[number];
 
 function memberKeySelector(member: UserGroupMember) {
-    return member.userId;
+    return member.user.firebaseId;
 }
 
 interface DateRangeValue {
@@ -154,7 +163,7 @@ interface Props {
     className?: string;
 }
 
-type UserMembershipType = NonNullable<NonNullable<UserMembershipsExportQuery['userGroup']>['userMemberships']>['items'];
+type UserMembershipType = NonNullable<NonNullable<UserMembershipsExportQuery['contributorUserGroup']>['userMemberships']>['results'];
 
 function UserGroupDashboard(props: Props) {
     const { className } = props;
@@ -202,15 +211,13 @@ function UserGroupDashboard(props: Props) {
         },
     );
 
-    const userGroupExportVariable = useMemo(
-        (): UserMembershipsExportQueryVariables | undefined => (
-            userGroupId ? {
-                pk: userGroupId,
-                limit: EXPORT_LIMIT,
-                offset: 0,
-            } : undefined
-        ), [userGroupId],
-    );
+    const userGroupExportVariable = useMemo((): UserMembershipsExportQueryVariables | undefined => (
+        userGroupId ? {
+            pk: userGroupId,
+            limit: EXPORT_LIMIT,
+            offset: 0,
+        } : undefined
+    ), [userGroupId]);
 
     const [
         exportUserMembership,
@@ -219,9 +226,10 @@ function UserGroupDashboard(props: Props) {
         {
             variables: userGroupExportVariable,
             onCompleted: (response) => {
-                const result = response?.userGroup?.userMemberships;
-                const userMembershipsCount = response?.userGroup?.userMemberships?.count ?? 0;
-                const newUserMembershipsData = [...userMembershipsData, ...(result?.items ?? [])];
+                const result = response?.contributorUserGroup?.userMemberships;
+                // eslint-disable-next-line max-len
+                const userMembershipsCount = response?.contributorUserGroup?.userMemberships?.totalCount ?? 0;
+                const newUserMembershipsData = [...userMembershipsData, ...(result?.results ?? [])];
 
                 if (newUserMembershipsData?.length < userMembershipsCount) {
                     setExportPending(true);
@@ -239,7 +247,8 @@ function UserGroupDashboard(props: Props) {
                         ['User', 'Total swipes', 'Project contributed', 'Time spent(mins)'],
                         ...(newUserMembershipsData?.map((user) => (
                             [
-                                isFalsyString(user.username) ? user.userId : user.username,
+                                // eslint-disable-next-line max-len
+                                isFalsyString(user.user.username) ? user.user.firebaseId : user.user.username,
                                 user.totalSwipes,
                                 user.totalMappingProjects,
                                 user.totalSwipeTime,
@@ -254,7 +263,7 @@ function UserGroupDashboard(props: Props) {
                     const objUrl = URL.createObjectURL(blob);
                     const link = document.createElement('a');
                     link.href = objUrl;
-                    link.download = `${userGroupStats?.userGroup?.name ?? 'users'}.csv`;
+                    link.download = `${userGroupStats?.contributorUserGroup?.name ?? 'users'}.csv`;
                     document.body.appendChild(link);
                     link.dispatchEvent(
                         new MouseEvent('click', {
@@ -293,35 +302,47 @@ function UserGroupDashboard(props: Props) {
         },
     );
 
-    const memberList = userGroupStats?.userGroup?.userMemberships?.items;
-    const totalMembers = userGroupStats?.userGroup?.userMemberships?.count ?? 0;
+    const memberList = userGroupStats?.contributorUserGroup?.userMemberships?.results;
+    const totalMembers = userGroupStats?.contributorUserGroup?.membersCount ?? 0;
 
     const memberRendererParams = useCallback((_: string, item: UserGroupMember) => (
-        { member: item }
+        {
+            member: {
+                totalMappingProjects: item.totalMappingProjects,
+                totalSwipeTime: item.totalSwipeTime,
+                totalSwipes: item.totalSwipes,
+                isActive: item.isActive,
+                username: item.user.username,
+                userId: item.user.firebaseId,
+            },
+        }
     ), []);
 
     const setDateRangeSafe = React.useCallback((newValue: DateRangeValue | undefined) => {
         setDateRange(newValue ?? defaultDateRange);
     }, [setDateRange]);
 
-    const totalSwipes = userGroupStats?.userGroupStats?.stats?.totalSwipes ?? 0;
-    const totalSwipesLastMonth = userGroupStats?.userGroupStats?.statsLatest?.totalSwipes ?? 0;
+    const totalSwipes = userGroupStats?.communityUserGroupStats?.stats?.totalSwipes ?? 0;
 
-    const totalSwipeTime = userGroupStats?.userGroupStats?.stats?.totalSwipeTime ?? 0;
     // eslint-disable-next-line max-len
-    const totalSwipeTimeLastMonth = userGroupStats?.userGroupStats?.statsLatest?.totalSwipeTime ?? 0;
+    const totalSwipesLastMonth = userGroupStats?.communityUserGroupStats?.statsLatest?.totalSwipes ?? 0;
 
-    const totalContributors = userGroupStats?.userGroupStats?.stats?.totalContributors ?? 0;
+    const totalSwipeTime = userGroupStats?.communityUserGroupStats?.stats?.totalSwipeTime ?? 0;
     // eslint-disable-next-line max-len
-    const totalContributorsLastMonth = userGroupStats?.userGroupStats?.statsLatest?.totalContributors ?? 0;
+    const totalSwipeTimeLastMonth = userGroupStats?.communityUserGroupStats?.statsLatest?.totalSwipeTime ?? 0;
 
-    const filteredStats = filteredUserGroupStats?.userGroupStats?.filteredStats;
+    // eslint-disable-next-line max-len
+    const totalContributors = userGroupStats?.communityUserGroupStats?.stats?.totalContributors ?? 0;
+    // eslint-disable-next-line max-len
+    const totalContributorsLastMonth = userGroupStats?.communityUserGroupStats?.statsLatest?.totalContributors ?? 0;
+
+    const filteredStats = filteredUserGroupStats?.communityUserGroupStats?.filteredStats;
 
     return (
         <Page
             className={className}
             variant="userGroup"
-            heading={userGroupStats?.userGroup?.name}
+            heading={userGroupStats?.contributorUserGroup?.name}
             totalSwipes={totalSwipes}
             totalSwipesLastMonth={totalSwipesLastMonth}
             totalTimeSpent={totalSwipeTime}
@@ -339,7 +360,7 @@ function UserGroupDashboard(props: Props) {
                     swipeByProjectType={filteredStats?.swipeByProjectType}
                     dateRange={dateRange}
                     handleDateRangeChange={setDateRangeSafe}
-                    contributions={filteredStats?.contributionByGeo as MapContributionType[]}
+                    contributions={filteredStats?.swipeByProjectGeo as MapContributionType[]}
                 />
             )}
             additionalContent={totalMembers > 0 && (

@@ -1,9 +1,9 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { _cs } from '@togglecorp/fujs';
 
 import RawButton, { Props as RawButtonProps } from '../RawButton';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 export type ButtonVariant = (
     'default'
@@ -56,6 +56,7 @@ export interface Props<N> extends RawButtonProps<N> {
 
 type ButtonFeatureKeys = 'variant' | 'className' | 'actionsClassName' | 'iconsClassName' | 'childrenClassName' | 'children' | 'icons' | 'actions' | 'disabled';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useButtonFeatures(
     props: Pick<Props<string>, ButtonFeatureKeys>,
 ) {
@@ -141,7 +142,9 @@ function Button<N>(props: Props<N>) {
     return (
         <RawButton
             type={type}
+            // eslint-disable-next-line react/jsx-props-no-spreading
             {...otherProps}
+            // eslint-disable-next-line react/jsx-props-no-spreading
             {...buttonProps}
         />
     );

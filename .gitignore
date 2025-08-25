@@ -1,22 +1,48 @@
-/node_modules
-
-/build
-/coverage
-/generated
-
-.env
-
-.vscode
-
+# Logs
+logs
+*.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
+node_modules
+dist
+dist-ssr
+build
+build-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 *.tmp
 *.bak
 *.swp
 
+# Env
+.env*
+!.env.example
+
 .eslintcache
 tsconfig.tsbuildinfo
 
-.DS_Store
+# Custom ignores
+stats.html
+generated/
+coverage/
+
+# storybook build
+storybook-static/
+
+# Helm
+.helm-charts/
+
+# Pnpm
+.pnpm-store

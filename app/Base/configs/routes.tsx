@@ -5,11 +5,8 @@ import { wrap } from '#base/utils/routes';
 const fourHundredFour = wrap({
     path: '*',
     title: '404',
-    component: lazy(() => import('#base/components/PreloadMessage')),
-    componentProps: {
-        heading: '404',
-        content: 'What you are looking for does not exist.',
-    },
+    component: lazy(() => import('#views/FourHundredFour')),
+    componentProps: {},
     visibility: 'is-anything',
     navbarVisibility: true,
 });

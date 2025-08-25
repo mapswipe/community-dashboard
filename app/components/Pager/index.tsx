@@ -1,16 +1,15 @@
 import React from 'react';
-import { _cs } from '@togglecorp/fujs';
 import { IoEllipsisHorizontal } from 'react-icons/io5';
+import { _cs } from '@togglecorp/fujs';
 
-import SelectInput from '#components/SelectInput';
 import Button from '#components/Button';
-
+import SelectInput from '#components/SelectInput';
 import {
-    valueSelector,
     labelSelector,
+    valueSelector,
 } from '#utils/common';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 interface LabelValue {
     value: number;

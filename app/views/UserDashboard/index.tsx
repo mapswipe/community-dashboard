@@ -1,45 +1,47 @@
 import React, { useMemo } from 'react';
-import { gql, useQuery } from '@apollo/client';
-import { encodeDate, isDefined, isFalsyString } from '@togglecorp/fujs';
-import { useParams, generatePath, Link } from 'react-router-dom';
+import {
+    generatePath,
+    Link,
+    useParams,
+} from 'react-router';
+import {
+    gql,
+    useQuery,
+} from '@apollo/client';
+import {
+    encodeDate,
+    isDefined,
+    isFalsyString,
+} from '@togglecorp/fujs';
 
-import useUrlState from '#hooks/useUrlState';
 import routes from '#base/configs/routes';
 import { MapContributionType } from '#components/ContributionHeatMap';
-import InformationCard from '#components/InformationCard';
+import { getThisYear } from '#components/DateRangeInput/predefinedDateRange';
 import Heading from '#components/Heading';
-import Pager from '#components/Pager';
+import InformationCard from '#components/InformationCard';
 import Page from '#components/Page';
+import Pager from '#components/Pager';
 import {
-    UserStatsQuery,
-    UserStatsQueryVariables,
     FilteredUserStatsQuery,
     FilteredUserStatsQueryVariables,
-} from '#generated/types';
+    UserStatsQuery,
+    UserStatsQueryVariables,
+} from '#generated/types/graphql';
+import useUrlState from '#hooks/useUrlState';
 import groupSvg from '#resources/icons/group.svg';
-import StatsBoard from '#views/StatsBoard';
-import { getThisYear } from '#components/DateRangeInput/predefinedDateRange';
 import { defaultPagePerItemOptions } from '#utils/common';
+import StatsBoard from '#views/StatsBoard';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 const USER_STATS = gql`
     query UserStats($pk: ID!, $limit: Int!, $offset: Int!) {
-        user(pk: $pk) {
+        contributorUserByFirebaseId(firebaseId: $pk) {
             id
-            userId
+            firebaseId
             username
-            userInUserGroups(pagination: {limit: $limit, offset: $offset}) {
-                count
-                items {
-                    id
-                    userGroupId
-                    userGroupName
-                    membersCount
-                }
-            }
         }
-        userStats(userId: $pk) {
+        communityUserStats(firebaseId: $pk) {
             id
             stats {
                 totalSwipes
@@ -51,21 +53,32 @@ const USER_STATS = gql`
                 totalUserGroups
             }
         }
+        contributorUserGroups(
+            pagination: {limit: $limit, offset: $offset}
+            filters: {userFirebaseId: $pk}
+        ) {
+            results {
+                id
+                name
+                membersCount
+            }
+            totalCount
+        }
     }
 `;
 
 const FILTERED_USER_STATS = gql`
-    query FilteredUserStats($pk: ID!, $fromDate: DateTime!, $toDate: DateTime!) {
-        userStats(userId: $pk) {
+    query FilteredUserStats($pk: ID!, $fromDate: Date!, $toDate: Date!) {
+        communityUserStats(firebaseId: $pk) {
             id
-            filteredStats(dateRange: { fromDate: $fromDate, toDate: $toDate}) {
+            filteredStats(dateRange: {fromDate: $fromDate, toDate: $toDate}) {
                 id
                 areaSwipedByProjectType {
                     totalArea
                     projectType
                     projectTypeDisplay
                 }
-                contributionByGeo {
+                swipeByProjectGeo {
                     geojson
                     totalContribution
                 }
@@ -167,26 +180,26 @@ function UserDashboard(props: Props) {
         setDateRange(newValue ?? defaultDateRange);
     }, [setDateRange]);
 
-    const totalSwipes = userStats?.userStats?.stats?.totalSwipes;
-    const totalSwipesLastMonth = userStats?.userStats?.statsLatest?.totalSwipes;
+    const totalSwipes = userStats?.communityUserStats?.stats?.totalSwipes;
+    const totalSwipesLastMonth = userStats?.communityUserStats?.statsLatest?.totalSwipes;
 
-    const totalSwipeTime = userStats?.userStats?.stats?.totalSwipeTime;
-    const totalSwipeTimeLastMonth = userStats?.userStats?.statsLatest?.totalSwipeTime;
+    const totalSwipeTime = userStats?.communityUserStats?.stats?.totalSwipeTime;
+    const totalSwipeTimeLastMonth = userStats?.communityUserStats?.statsLatest?.totalSwipeTime;
 
-    const totalUserGroup = userStats?.user?.userInUserGroups?.count ?? 0;
-    const totalUserGroupLastMonth = userStats?.userStats?.statsLatest?.totalUserGroups;
+    const totalUserGroup = userStats?.contributorUserGroups?.totalCount ?? 0;
+    const totalUserGroupLastMonth = userStats?.communityUserStats?.statsLatest?.totalUserGroups;
 
-    const userGroupsLength = userStats?.user?.userInUserGroups?.items?.length ?? 0;
+    const userGroupsLength = userStats?.contributorUserGroups?.results?.length ?? 0;
     const excessUserGroups = Array.from(new Array((3 - ((userGroupsLength) % 3)) % 3).keys());
 
-    const filteredStats = filteredUserStats?.userStats?.filteredStats;
+    const filteredStats = filteredUserStats?.communityUserStats?.filteredStats;
 
     // NOTE: OSM user does not have username stored
     const userName = useMemo(() => {
-        if (isDefined(userStats) && isDefined(userStats.user)) {
-            return isFalsyString(userStats.user.username)
-                ? userStats.user.userId
-                : userStats.user.username;
+        if (isDefined(userStats) && isDefined(userStats.contributorUserByFirebaseId)) {
+            return isFalsyString(userStats.contributorUserByFirebaseId.username)
+                ? userStats.contributorUserByFirebaseId.firebaseId
+                : userStats.contributorUserByFirebaseId.username;
         }
 
         return null;
@@ -215,7 +228,7 @@ function UserDashboard(props: Props) {
                     organizationTypeStats={filteredStats?.swipeByOrganizationName}
                     swipeByProjectType={filteredStats?.swipeByProjectType}
                     // eslint-disable-next-line max-len
-                    contributions={filteredStats?.contributionByGeo as MapContributionType[] | undefined}
+                    contributions={filteredStats?.swipeByProjectGeo as MapContributionType[] | undefined}
                 />
             )}
             additionalContent={totalUserGroup > 0 && (
@@ -224,9 +237,9 @@ function UserDashboard(props: Props) {
                         Current Groups
                     </Heading>
                     <div className={styles.groupsContainer}>
-                        {userStats?.user?.userInUserGroups?.items?.map((group) => (
+                        {userStats?.contributorUserGroups?.results?.map((group) => (
                             <InformationCard
-                                key={group.userGroupId}
+                                key={group.id}
                                 className={styles.group}
                                 icon={(<img src={groupSvg} alt="swipe icon" />)}
                                 // subHeading={(
@@ -243,13 +256,18 @@ function UserDashboard(props: Props) {
                                         className={styles.link}
                                         to={generatePath(
                                             routes.userGroupDashboard.path,
-                                            { userGroupId: group.userGroupId },
+                                            { userGroupId: group.id },
                                         )}
                                     >
-                                        {group.userGroupName}
+                                        {group.name}
                                     </Link>
                                 )}
-                                description={`${group.membersCount} ${group.membersCount > 1 ? 'members' : 'member'}`}
+                                description={
+                                    `${group.membersCount} ${group.membersCount > 1
+                                        ? 'members'
+                                        : 'member'
+                                    }`
+                                }
                             />
                         ))}
                         {excessUserGroups.map(

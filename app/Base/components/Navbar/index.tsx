@@ -1,11 +1,11 @@
-import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router';
 import { _cs } from '@togglecorp/fujs';
 
-import mapSwipeLogo from '#resources/img/logo.svg';
 import ItemSelectInput, { SearchItemType } from '#components/ItemSelectInput';
+import mapSwipeLogo from '#resources/img/logo.svg';
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 
 interface Props {
     className?: string;
@@ -14,21 +14,21 @@ interface Props {
 function Navbar(props: Props) {
     const { className } = props;
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     // FIXME: use route.path
     const handleSelectItem = useCallback((item: SearchItemType | undefined) => {
         if (item) {
-            history.push(`/${item.type}/${item.id}/`);
+            navigate(`/${item.type}/${item.id}/`);
         }
-    }, [history]);
+    }, [navigate]);
 
     return (
         <nav className={_cs(className, styles.navbar)}>
             <div className={styles.container}>
                 <div className={styles.navLinks}>
                     <a
-                        href={process.env.REACT_APP_MAPSWIPE_WEBSITE ?? 'https://mapswipe.org'}
+                        href={import.meta.env.REACT_APP_MAPSWIPE_WEBSITE ?? 'https://mapswipe.org'}
                         className={styles.link}
                     >
                         <div className={styles.appBrand}>
