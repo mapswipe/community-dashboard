@@ -8,7 +8,7 @@ services:
     environment:
       NODE_OPTIONS: --openssl-legacy-provider
       APP_TITLE: ${APP_TITLE:-Mapswipe Community Dashboard}
-      APP_ENVIRONMENT: ${APP_ENVIRONMENT:-development}
+      APP_ENVIRONMENT: ${APP_ENVIRONMENT:-DEV}
       APP_GRAPHQL_ENDPOINT: ${APP_GRAPHQL_ENDPOINT:-http://localhost:8000/graphql/}
       APP_BACKEND_ENDPOINT: ${APP_BACKEND_ENDPOINT:-http://localhost:8000/}
       APP_GRAPHQL_CODEGEN_ENDPOINT: ${GRAPHQL_CODEGEN_ENDPOINT:-./backend/schema.graphql}
