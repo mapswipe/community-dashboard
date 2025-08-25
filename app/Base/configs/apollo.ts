@@ -1,3 +1,4 @@
+import { Cookies } from 'react-cookie';
 import {
     ApolloClientOptions,
     ApolloLink as ApolloLinkFromClient,
@@ -7,22 +8,18 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
-function getCookie(): string | null {
-    const match = document.cookie.match(/(?:^|;\s*)(mapswipe[^=]*csrftoken)=([^;]+)/i);
-    return match ? decodeURIComponent(match[2]) : null;
-}
+const COOKIE_NAME = `MAPSWIPE-${import.meta.env.APP_ENVIRONMENT}-CSRFTOKEN`;
+
+const cookies = new Cookies();
 
 const GRAPHQL_ENDPOINT = import.meta.env.APP_GRAPHQL_ENDPOINT as string;
 
-const csrfMiddleware = setContext((_, { headers }) => {
-    const csrfToken = getCookie();
-    return {
-        headers: {
-            ...headers,
-            'X-CSRFToken': csrfToken ?? '',
-        },
-    };
-});
+const csrfMiddleware = setContext((_, { headers }) => ({
+    headers: {
+        ...headers,
+        'X-CSRFToken': cookies.get(COOKIE_NAME) ?? '',
+    },
+}));
 
 const link = csrfMiddleware.concat(
     new HttpLink({
