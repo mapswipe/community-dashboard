@@ -441,8 +441,7 @@ function StatsBoard(props: Props) {
     )?.totalArea;
     */
     const streetTotalArea = areaSwipedByProjectType?.find(
-        // TODO: Change the type to street
-        (project) => project.projectType === COMPLETENESS,
+        (project) => project.projectType === STREET,
     )?.totalArea;
 
     const completenessTotalArea = areaSwipedByProjectType?.find(
@@ -466,8 +465,7 @@ function StatsBoard(props: Props) {
     )?.totalSwipes;
 
     const streetTotalSwipes = swipeByProjectType?.find(
-        // TODO: Change the type to street
-        (project) => project.projectType === COMPLETENESS,
+        (project) => project.projectType === STREET,
     )?.totalSwipes;
 
     const completenessTotalSwipes = swipeByProjectType?.find(
@@ -666,7 +664,7 @@ function StatsBoard(props: Props) {
                                 Area Swipes
                             </div>
                         )}
-                        subHeading="Find features"
+                        subHeading="Find Features"
                         variant="stat"
                     />
                     <InformationCard
@@ -782,7 +780,7 @@ function StatsBoard(props: Props) {
                         )}
                         label={(
                             <div className={styles.infoLabel}>
-                                Streets Viewed
+                                Street Viewed
                             </div>
                         )}
                         subHeading="View Streets"

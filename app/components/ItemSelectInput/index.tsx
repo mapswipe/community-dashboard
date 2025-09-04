@@ -67,7 +67,7 @@ const USER_GROUPS = gql`
 query UserGroupOptions($search: String, $offset: Int!, $limit: Int!) {
     contributorUserGroups(
         filters: {
-            name: {iContains: $search}
+            name: $search
         }
         pagination: {
             limit: $limit,
