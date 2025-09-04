@@ -55,7 +55,7 @@ const USER_STATS = gql`
         }
         contributorUserGroups(
             pagination: {limit: $limit, offset: $offset}
-            filters: {userFirebaseId: $pk}
+            filters: {firebaseId: $pk}
         ) {
             results {
                 id
