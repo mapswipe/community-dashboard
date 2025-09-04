@@ -666,7 +666,7 @@ function StatsBoard(props: Props) {
                                 Area Swipes
                             </div>
                         )}
-                        subHeading="Find"
+                        subHeading="Find features"
                         variant="stat"
                     />
                     <InformationCard
@@ -689,7 +689,7 @@ function StatsBoard(props: Props) {
                                 Features Checked
                             </div>
                         )}
-                        subHeading="Validate"
+                        subHeading="Validate Footprints"
                         variant="stat"
                     />
                     <InformationCard
@@ -721,7 +721,7 @@ function StatsBoard(props: Props) {
                                 Scene Compared
                             </div>
                         )}
-                        subHeading="Compare"
+                        subHeading="Compare Dates"
                         variant="stat"
                     />
                     <InformationCard
@@ -750,10 +750,10 @@ function StatsBoard(props: Props) {
                         )}
                         label={(
                             <div className={styles.infoLabel}>
-                                Completeness
+                                Completeness Checked
                             </div>
                         )}
-                        subHeading="Completeness"
+                        subHeading="Check Completeness"
                         variant="stat"
                     />
                     <InformationCard
@@ -782,10 +782,10 @@ function StatsBoard(props: Props) {
                         )}
                         label={(
                             <div className={styles.infoLabel}>
-                                Streets Covered
+                                Streets Viewed
                             </div>
                         )}
-                        subHeading="Street"
+                        subHeading="View Streets"
                         variant="stat"
                     />
                     <InformationCard
@@ -806,10 +806,10 @@ function StatsBoard(props: Props) {
                         )}
                         label={(
                             <div className={styles.infoLabel}>
-                                Images Validated
+                                Images Assessed
                             </div>
                         )}
-                        subHeading="Validate Image"
+                        subHeading="Assess Images"
                         variant="stat"
                     />
                 </div>
