@@ -10,7 +10,22 @@ import { ValidateEnv as validateEnv } from '@julr/vite-plugin-validate-env';
 import communityDashboardPackage from './package.json';
 
 /* Get commit hash */
-const commitHash = execSync('git rev-parse --short HEAD').toString();
+function getCommitHash(): string {
+  if (process.env.APP_COMMIT_HASH) {
+    return process.env.APP_COMMIT_HASH;
+  }
+
+  try {
+    return execSync('git rev-parse --short HEAD').toString().trim();
+  } catch (error) {
+    throw new Error(
+      'Unable to determine commit hash. You must either provide a commit hash using the APP_COMMIT_HASH environment variable,' +
+      ' or provide a valid Git repository (submodule doesn\'t work with docker).'
+    );
+  }
+}
+
+const commitHash = getCommitHash();
 
 export default defineConfig(({ mode }) => {
     const isProd = mode === 'production';
