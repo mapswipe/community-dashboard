@@ -10,15 +10,20 @@ RUN apt-get update -y \
 
 WORKDIR /code
 
-# -------------------------- web-app-serve- Builder --------------------------------
+# -------------------------- Builder ---------------------------------------
 
-FROM dev AS web-app-serve-build
+FROM dev AS builder
 
-COPY ./package.json ./pnpm-lock.yaml /code/
-
-RUN pnpm install
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
+    pnpm install --frozen-lockfile
 
 COPY . /code/
+
+# -------------------------- web-app-serve- Builder --------------------------------
+
+FROM builder AS web-app-serve-build
 
 # Build variables (Requires backend pulled)
 
