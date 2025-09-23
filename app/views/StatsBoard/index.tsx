@@ -88,7 +88,7 @@ const projectTypes: Record<string, { color: string, name: string }> = {
     },
     [VALIDATE]: {
         color: '#bbcb7d',
-        name: 'Validate Foorprints',
+        name: 'Validate Footprints',
     },
     [COMPARE]: {
         color: '#79aeeb',
