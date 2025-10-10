@@ -84,27 +84,27 @@ const projectTypes: Record<string, { color: string, name: string }> = {
     },
     [FIND]: {
         color: '#f8a769',
-        name: 'Find',
+        name: 'Find Features',
     },
     [VALIDATE]: {
         color: '#bbcb7d',
-        name: 'Validate',
+        name: 'Validate Footprints',
     },
     [COMPARE]: {
         color: '#79aeeb',
-        name: 'Compare',
+        name: 'Compare Dates',
     },
     [COMPLETENESS]: {
         color: '#fb8072',
-        name: 'Completeness',
+        name: 'Check Completeness',
     },
     [VALIDATE_IMAGE]: {
         color: '#a1b963',
-        name: 'Validate Image',
+        name: 'Assess Images',
     },
     [STREET]: {
         color: '#c2afc3',
-        name: 'Validate Image',
+        name: 'View Streets',
     },
 };
 
