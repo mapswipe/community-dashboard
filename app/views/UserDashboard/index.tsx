@@ -36,12 +36,12 @@ import styles from './styles.module.css';
 
 const USER_STATS = gql`
     query UserStats($pk: ID!, $limit: Int!, $offset: Int!) {
-        contributorUserByFirebaseId(firebaseId: $pk) {
+        contributorUser(userId: {firebaseId: $pk}) {
             id
             firebaseId
             username
         }
-        communityUserStats(firebaseId: $pk) {
+        communityUserStats(userId: {firebaseId: $pk}) {
             id
             stats {
                 totalSwipes
@@ -59,8 +59,11 @@ const USER_STATS = gql`
         ) {
             results {
                 id
+                firebaseId
                 name
-                membersCount
+                userMemberships {
+                    totalCount
+                }
             }
             totalCount
         }
@@ -69,7 +72,7 @@ const USER_STATS = gql`
 
 const FILTERED_USER_STATS = gql`
     query FilteredUserStats($pk: ID!, $fromDate: Date!, $toDate: Date!) {
-        communityUserStats(firebaseId: $pk) {
+        communityUserStats(userId: {firebaseId: $pk}) {
             id
             filteredStats(dateRange: {fromDate: $fromDate, toDate: $toDate}) {
                 id
@@ -196,10 +199,10 @@ function UserDashboard(props: Props) {
 
     // NOTE: OSM user does not have username stored
     const userName = useMemo(() => {
-        if (isDefined(userStats) && isDefined(userStats.contributorUserByFirebaseId)) {
-            return isFalsyString(userStats.contributorUserByFirebaseId.username)
-                ? userStats.contributorUserByFirebaseId.firebaseId
-                : userStats.contributorUserByFirebaseId.username;
+        if (isDefined(userStats) && isDefined(userStats.contributorUser)) {
+            return isFalsyString(userStats.contributorUser.username)
+                ? userStats.contributorUser.firebaseId
+                : userStats.contributorUser.username;
         }
 
         return null;
@@ -256,14 +259,14 @@ function UserDashboard(props: Props) {
                                         className={styles.link}
                                         to={generatePath(
                                             routes.userGroupDashboard.path,
-                                            { userGroupId: group.id },
+                                            { userGroupId: group.firebaseId },
                                         )}
                                     >
                                         {group.name}
                                     </Link>
                                 )}
                                 description={
-                                    `${group.membersCount} ${group.membersCount > 1
+                                    `${group.userMemberships?.totalCount} ${group.userMemberships?.totalCount > 1
                                         ? 'members'
                                         : 'member'
                                     }`
