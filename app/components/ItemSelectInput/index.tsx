@@ -76,6 +76,7 @@ query UserGroupOptions($search: String, $offset: Int!, $limit: Int!) {
     ) {
         results {
             id
+            firebaseId
             isArchived
             clientId
             name
@@ -223,7 +224,7 @@ function ItemSelectInput<Name extends string>(props: ItemSelectInputProps<Name>)
                 type: 'user' as const,
             })) ?? []),
             ...(userGroupsData?.map((userGroup) => ({
-                id: userGroup.id,
+                id: userGroup.firebaseId,
                 name: userGroup.name ?? 'Unknown',
                 type: 'user-group' as const,
                 isArchived: userGroup.isArchived ?? false,

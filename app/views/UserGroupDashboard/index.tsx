@@ -40,11 +40,10 @@ const EXPORT_LIMIT = 500;
 
 const USER_GROUP_STATS = gql`
 query UserGroupStats($pk: ID!, $limit: Int!, $offset: Int!) {
-    contributorUserGroup(id: $pk) {
+    contributorUserGroup(userGroupId: {firebaseId: $pk}) {
         id
         name
         description
-        membersCount
         userMemberships(pagination: {limit: $limit, offset: $offset}) {
             totalCount
             results {
@@ -61,7 +60,7 @@ query UserGroupStats($pk: ID!, $limit: Int!, $offset: Int!) {
             }
         }
     }
-    communityUserGroupStats(userGroupId: $pk) {
+    communityUserGroupStats(userGroupId: {firebaseId: $pk}) {
         id
         stats {
             totalContributors
@@ -79,7 +78,7 @@ query UserGroupStats($pk: ID!, $limit: Int!, $offset: Int!) {
 
 const FILTERED_USER_GROUP_STATS = gql`
     query FilteredUserGroupStats($pk: ID!, $fromDate: Date! $toDate: Date!) {
-        communityUserGroupStats(userGroupId: $pk) {
+        communityUserGroupStats(userGroupId: {firebaseId: $pk}) {
             id
             filteredStats(dateRange: {fromDate: $fromDate, toDate: $toDate}) {
                 areaSwipedByProjectType {
@@ -119,11 +118,10 @@ const USER_MEMBERSHIPS_EXPORT = gql`
         $limit: Int!,
         $offset: Int!,
     ) {
-        contributorUserGroup(id: $pk) {
+        contributorUserGroup(userGroupId: {firebaseId: $pk}) {
             id
             name
             description
-            membersCount
             userMemberships(pagination: {limit: $limit, offset: $offset}) {
                 totalCount
                 results {
@@ -303,7 +301,7 @@ function UserGroupDashboard(props: Props) {
     );
 
     const memberList = userGroupStats?.contributorUserGroup?.userMemberships?.results;
-    const totalMembers = userGroupStats?.contributorUserGroup?.membersCount ?? 0;
+    const totalMembers = userGroupStats?.contributorUserGroup?.userMemberships?.totalCount ?? 0;
 
     const memberRendererParams = useCallback((_: string, item: UserGroupMember) => (
         {
