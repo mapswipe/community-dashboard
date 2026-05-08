@@ -60,18 +60,12 @@
         }
 
         .stats-card-container {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
             gap: var(--spacing-medium);
 
-            >* {
-                flex-basis: 25%;
-                flex-grow: 1;
-                min-width: 12rem;
-
-                @media (max-width: 48rem) {
-                    min-width: 100%;
-                }
+            @media (max-width: 20rem) {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -194,5 +188,9 @@
         small {
             color: var(--color-text-watermark);
         }
+    }
+
+    .locate-icon {
+        height: var(--icon-height);
     }
 }

@@ -43,6 +43,7 @@ import {
     ContributorTimeStatType,
     OrganizationSwipeStatsType,
     ProjectTypeAreaStatsType,
+    ProjectTypeEnum,
     ProjectTypeSwipeStatsType,
 } from '#generated/types/graphql';
 // import { formatDuration, intervalToDuration } from 'date-fns';
@@ -50,6 +51,7 @@ import useDocumentSize from '#hooks/useDocumentSize';
 import areaSvg from '#resources/icons/area.svg';
 import completenessSvg from '#resources/icons/completeness.svg';
 import featureSvg from '#resources/icons/feature.svg';
+import locateFeaturesImgSvg from '#resources/icons/locate-features.svg';
 import sceneSvg from '#resources/icons/scene.svg';
 import streetSvg from '#resources/icons/street.svg';
 import validateImgSvg from '#resources/icons/validate-image.svg';
@@ -70,12 +72,13 @@ const CHART_BREAKPOINT = 700;
 
 export type ActualContributorTimeStatType = ContributorTimeStatType & { totalSwipeTime: number };
 const UNKNOWN = '-1';
-const FIND = 'FIND';
-const VALIDATE = 'VALIDATE';
-const COMPARE = 'COMPARE';
-const COMPLETENESS = 'COMPLETENESS';
-const VALIDATE_IMAGE = 'VALIDATE_IMAGE';
-const STREET = 'STREET';
+const FIND = 'FIND' satisfies ProjectTypeEnum;
+const VALIDATE = 'VALIDATE' satisfies ProjectTypeEnum;
+const COMPARE = 'COMPARE' satisfies ProjectTypeEnum;
+const COMPLETENESS = 'COMPLETENESS' satisfies ProjectTypeEnum;
+const VALIDATE_IMAGE = 'VALIDATE_IMAGE' satisfies ProjectTypeEnum;
+const STREET = 'STREET' satisfies ProjectTypeEnum;
+const LOCATE_FEATURES = 'LOCATE' satisfies ProjectTypeEnum;
 
 const projectTypes: Record<string, { color: string, name: string }> = {
     [UNKNOWN]: {
@@ -105,6 +108,10 @@ const projectTypes: Record<string, { color: string, name: string }> = {
     [STREET]: {
         color: '#c2afc3',
         name: 'View Streets',
+    },
+    [LOCATE_FEATURES]: {
+        color: '#f8a769',
+        name: 'Locate Features',
     },
 };
 
@@ -448,6 +455,10 @@ function StatsBoard(props: Props) {
         (project) => project.projectType === COMPLETENESS,
     )?.totalArea;
 
+    const locateTotalArea = areaSwipedByProjectType?.find(
+        (project) => project.projectType === LOCATE_FEATURES,
+    )?.totalArea;
+
     const findTotalSwipes = swipeByProjectType?.find(
         (project) => project.projectType === FIND,
     )?.totalSwipes;
@@ -470,6 +481,10 @@ function StatsBoard(props: Props) {
 
     const completenessTotalSwipes = swipeByProjectType?.find(
         (project) => project.projectType === COMPLETENESS,
+    )?.totalSwipes;
+
+    const locateFeaturesTotalSwipes = swipeByProjectType?.find(
+        (project) => project.projectType === LOCATE_FEATURES,
     )?.totalSwipes;
 
     const organizationColors = scaleOrdinal<string, string | undefined>()
@@ -808,6 +823,40 @@ function StatsBoard(props: Props) {
                             </div>
                         )}
                         subHeading="Assess Images"
+                        variant="stat"
+                    />
+                    <InformationCard
+                        icon={(
+                            // eslint-disable-next-line jsx-a11y/img-redundant-alt
+                            <img
+                                className={styles.locateIcon}
+                                src={locateFeaturesImgSvg}
+                                alt="locate features project icon"
+                            />
+                        )}
+                        value={(
+                            <>
+                                <NumberOutput
+                                    className={styles.numberOutput}
+                                    value={locateFeaturesTotalSwipes}
+                                    normal
+                                    invalidText={0}
+                                />
+                                <NumberOutput
+                                    className={styles.areaOutput}
+                                    value={locateTotalArea}
+                                    normal
+                                    invalidText=""
+                                    unit="Sq. Km."
+                                />
+                            </>
+                        )}
+                        label={(
+                            <div className={styles.infoLabel}>
+                                Tiles Marked
+                            </div>
+                        )}
+                        subHeading={projectTypes[LOCATE_FEATURES].name}
                         variant="stat"
                     />
                 </div>

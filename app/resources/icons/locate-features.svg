@@ -1,0 +1,27 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_1_59" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="256" height="256">
+<rect width="256" height="256" fill="#FDE2CE" fill-opacity="0.6"/>
+</mask>
+<g mask="url(#mask0_1_59)">
+<rect width="256" height="256" fill="#FDE2CE" fill-opacity="0.6"/>
+<rect x="16" y="16" width="224" height="224" fill="#FDE2CE" fill-opacity="0.6"/>
+<rect x="16.5" y="16.5" width="223" height="223" stroke="black" stroke-opacity="0.17"/>
+<rect x="239" y="-207" width="224" height="224" fill="#FDE2CE" fill-opacity="0.6"/>
+<rect x="239.5" y="-206.5" width="223" height="223" stroke="black" stroke-opacity="0.17"/>
+<rect x="239" y="239" width="224" height="224" fill="#FDE2CE" fill-opacity="0.6"/>
+<rect x="239.5" y="239.5" width="223" height="223" stroke="black" stroke-opacity="0.17"/>
+<rect x="-207" y="239" width="224" height="224" fill="#FDE2CE" fill-opacity="0.6"/>
+<rect x="-206.5" y="239.5" width="223" height="223" stroke="black" stroke-opacity="0.17"/>
+<rect x="-207" y="-207" width="224" height="224" fill="#FDE2CE" fill-opacity="0.6"/>
+<rect x="-206.5" y="-206.5" width="223" height="223" stroke="black" stroke-opacity="0.17"/>
+</g>
+<path opacity="0.92" d="M128 251C195.931 251 251 195.931 251 128C251 60.069 195.931 5 128 5C60.069 5 5 60.069 5 128C5 195.931 60.069 251 128 251Z" fill="#FDE2CE" stroke="#3D5B32" stroke-opacity="0.51"/>
+<path opacity="0.32" d="M67 22L67.0106 234" stroke="#2E4E22" stroke-opacity="0.72" stroke-dasharray="6 4"/>
+<path opacity="0.32" d="M128.439 5V251" stroke="#2E4E22" stroke-opacity="0.72" stroke-dasharray="6 4"/>
+<path opacity="0.32" d="M189.854 22L190.005 234" stroke="#2E4E22" stroke-opacity="0.72" stroke-dasharray="6 4"/>
+<path opacity="0.32" d="M27 59L229 58.997" stroke="#2E4E22" stroke-opacity="0.72" stroke-dasharray="6 4"/>
+<path opacity="0.32" d="M5 128.969H251" stroke="#2E4E22" stroke-opacity="0.72" stroke-dasharray="6 4"/>
+<path opacity="0.32" d="M29 201.033H227.006" stroke="#2E4E22" stroke-opacity="0.72" stroke-dasharray="6 4"/>
+<rect x="70" y="110" width="30" height="17" rx="4" fill="#CD976D"/>
+<rect width="36" height="19" rx="4" transform="matrix(-1 0 0 1 185 179)" fill="#B46B33"/>
+</svg>
