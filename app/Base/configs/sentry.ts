@@ -10,16 +10,28 @@ import {
     reactRouterV7BrowserTracingIntegration,
 } from '@sentry/react';
 
+import { readRuntimeConfig } from '#base/configs/env';
+
 // import { Integrations } from '@sentry/tracing';
 
-const appName = import.meta.env.MY_APP_ID;
+const appName = import.meta.env.APP_ID;
 
-const sentryDsn = import.meta.env.APP_SENTRY_DSN;
+const sentryDsn = readRuntimeConfig(import.meta.env.APP_SENTRY_DSN);
 
-const tracesSampleRateFromEnv = Number(import.meta.env.APP_SENTRY_DSN);
-const tracesSampleRate = Number.isNaN(tracesSampleRateFromEnv) ? 0.2 : tracesSampleRateFromEnv;
+// NOTE: A variable that is unset, empty or out of range means "not configured"
+// and keeps the default, whereas an explicit '0' disables tracing. Beware that
+// Number('') and Number(' ') are 0, not NaN
+const rawTracesSampleRate = readRuntimeConfig(import.meta.env.APP_SENTRY_TRACES_SAMPLE_RATE);
+const tracesSampleRateFromEnv = rawTracesSampleRate?.trim();
+const parsedTracesSampleRate = tracesSampleRateFromEnv
+    ? Number(tracesSampleRateFromEnv)
+    : Number.NaN;
+const tracesSampleRateValid = Number.isFinite(parsedTracesSampleRate)
+    && parsedTracesSampleRate >= 0
+    && parsedTracesSampleRate <= 1;
+const tracesSampleRate = tracesSampleRateValid ? parsedTracesSampleRate : 0.2;
 
-const env = import.meta.env.APP_ENVIRONMENT;
+const env = readRuntimeConfig(import.meta.env.APP_ENVIRONMENT);
 
 const sentryConfig: BrowserOptions | undefined = sentryDsn ? {
     dsn: sentryDsn,

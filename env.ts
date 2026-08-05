@@ -21,6 +21,9 @@ export default defineConfig({
         APP_GRAPHQL_ENDPOINT: Schema.string({ format: 'url', protocol: true, tld: false }),
         APP_BACKEND_ENDPOINT: Schema.string({ format: 'url', protocol: true, tld: false }),
         APP_SENTRY_DSN: Schema.string.optional(),
+        // NOTE: Kept a string (not Schema.number) so it survives the
+        // web-app-serve placeholder override; consumers coerce it with Number()
+        APP_SENTRY_TRACES_SAMPLE_RATE: Schema.string.optional(),
         APP_ENVIRONMENT: (key: string, value: string) => {
             // FIXME: APP_ENVIRONMENT_PLACEHOLDER might not be required
             // NOTE: APP_ENVIRONMENT_PLACEHOLDER is meant to be used with image builds

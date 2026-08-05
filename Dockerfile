@@ -31,6 +31,7 @@ ENV APP_GRAPHQL_ENDPOINT=http://localhost:8000/graphql/
 ENV APP_BACKEND_ENDPOINT=http://localhost:8000/
 ENV APP_ENVIRONMENT=DEV
 ENV APP_SENTRY_DSN=temp
+ENV APP_SENTRY_TRACES_SAMPLE_RATE=temp
 ENV APP_GA_TRACKING_ID=temp
 ENV APP_GRAPHQL_CODEGEN_ENDPOINT=./backend/schema.graphql
 
@@ -72,7 +73,5 @@ ENV APPLY_CONFIG__APPLY_CONFIG_PATH=/web-app-serve/app-apply-config.sh
 # name (DEV/STAGE/PROD): it only exists to keep the marker from leaking, and an
 # obviously-bogus value makes a deployment that forgot to set the variable
 # self-evident in the CSRF cookie name, the Sentry environment tag and the
-# rendered config. (Note `isDev` in app/Base/configs/googleAnalytics.ts is a
-# build-time `=== 'DEV'` comparison against the placeholder marker, so it is
-# constant-folded to false and is NOT influenced by the runtime value.)
+# rendered config.
 ENV APP_ENVIRONMENT=UNSET

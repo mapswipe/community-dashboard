@@ -20,6 +20,7 @@ services:
       # Optional: left empty by default; an unset value resolves to JS
       # `undefined` at startup, which disables Sentry / Google Analytics.
       APP_SENTRY_DSN: "${APP_SENTRY_DSN:-}"
+      APP_SENTRY_TRACES_SAMPLE_RATE: "${APP_SENTRY_TRACES_SAMPLE_RATE:-}"
       APP_GA_TRACKING_ID: "${APP_GA_TRACKING_ID:-}"
     # NOTE: See the repo-root "Dockerfile" for the full set of dynamic env variables.
     env_file:
