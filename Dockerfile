@@ -1,6 +1,6 @@
 FROM node:20-bookworm AS dev
 
-LABEL maintainer="Mapswipe Dev"
+LABEL org.opencontainers.image.authors="Mapswipe Dev"
 
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends git \
