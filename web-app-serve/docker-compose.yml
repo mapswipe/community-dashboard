@@ -1,4 +1,5 @@
-name: mapswipe-community-dashboard
+# NOTE: The name is mandatory and should be unique
+name: ${COMPOSE_PROJECT_NAME:-mapswipe-community-dashboard}
 
 services:
   web-app-serve:
@@ -6,9 +7,23 @@ services:
       context: ../
       target: web-app-serve
     environment:
-      # web-app-serve config
-      APPLY_CONFIG__ENABLE_DEBUG: true
-    # NOTE: See "Dockerfile" to get dynamic env variables for .env file
-    env_file: .env
+      # web-app-serve config: dumps unreplaced placeholders + diffs at /__debug/
+      APPLY_CONFIG__ENABLE_DEBUG: "true"
+      # NOTE: APP_ENVIRONMENT is intentionally absent — it is baked as an ENV
+      # ("UNSET", a deliberately bogus placeholder value) in the Dockerfile final
+      # stage. Passing it here (even as ${APP_ENVIRONMENT:-DEV}) would mask the
+      # baked-default test. Set APP_ENVIRONMENT in the environment / local .env
+      # to run against a real backend.
+      # Dynamic configs (local defaults; override via an optional local .env)
+      APP_GRAPHQL_ENDPOINT: "${APP_GRAPHQL_ENDPOINT:-http://localhost:8000/graphql/}"
+      APP_BACKEND_ENDPOINT: "${APP_BACKEND_ENDPOINT:-http://localhost:8000/}"
+      # Optional: left empty by default; an unset value resolves to JS
+      # `undefined` at startup, which disables Sentry / Google Analytics.
+      APP_SENTRY_DSN: "${APP_SENTRY_DSN:-}"
+      APP_GA_TRACKING_ID: "${APP_GA_TRACKING_ID:-}"
+    # NOTE: See the repo-root "Dockerfile" for the full set of dynamic env variables.
+    env_file:
+      - path: .env
+        required: false
     ports:
       - '8050:80'
