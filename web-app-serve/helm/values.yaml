@@ -1,0 +1,27 @@
+# NOTE: Everything nests under `app:` — the alias of the web-app-serve-helm
+# dependency — so the values reach the subchart.
+app:
+  fullnameOverride: community-dashboard
+
+  image:
+    # NOTE: CI replaces these with the image it just built and pushed
+    name: SET-BY-CICD-IMAGE
+    tag: SET-BY-CICD-TAG
+
+  ingress:
+    # NOTE: Pre-seeded parent node — the CI provenance writer fails if it is
+    # missing. hostname/ingressClassName are deploy-time values supplied by the
+    # deployment (ArgoCD valuesObject / --values), not here.
+    annotations: {}
+
+  # NOTE: Runtime config is deploy-time — set it under `app.env` in the
+  # deployment's values, not here. APP_ENVIRONMENT is REQUIRED: the image bakes
+  # a bogus "UNSET" fallback only so unset placeholders cannot leak, and the CSRF
+  # cookie name (`MAPSWIPE-<APP_ENVIRONMENT>-CSRFTOKEN`) must match the backend's.
+  # e.g:
+  # env:
+  #   APP_ENVIRONMENT: "PROD"          # REQUIRED
+  #   APP_GRAPHQL_ENDPOINT: "https://api.example.org/graphql/"
+  #   APP_BACKEND_ENDPOINT: "https://api.example.org/"
+  #   APP_SENTRY_DSN: "..."            # optional; unset disables Sentry
+  #   APP_GA_TRACKING_ID: "..."        # optional; unset disables Google Analytics
