@@ -1,0 +1,14 @@
+apiVersion: v2
+name: community-dashboard-helm
+description: "Wrapper Helm chart for community-dashboard, depends on web-app-serve-helm"
+type: application
+
+# NOTE: CI (web-app-serve-action) rewrites only the SET-BY-CICD suffix, keeping
+# this chart's own semver prefix.
+version: 0.0.1-SET-BY-CICD
+
+dependencies:
+  - name: web-app-serve-helm
+    version: 0.2.1
+    repository: oci://ghcr.io/toggle-corp
+    alias: app

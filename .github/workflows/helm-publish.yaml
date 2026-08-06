@@ -5,14 +5,16 @@ on:
   push:
     branches:
       - develop
-      - feature/add-web-app-serve
+      - project/*
 
 permissions:
-  packages: write
+  contents: read       # checkout
+  packages: write      # push image + chart to GHCR
+  pull-requests: read  # provenance writer resolves the PR from the commit
 
 jobs:
   publish_image:
-    name: Publish Docker Image
+    name: Publish Docker Image + Helm Chart
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,6 +22,7 @@ jobs:
           submodules: true
 
       - name: Publish web-app-serve
-        uses: toggle-corp/web-app-serve-action@v0.1.1
+        uses: toggle-corp/web-app-serve-action@v0.2.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          helm_publish: true

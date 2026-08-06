@@ -1,1 +1,5 @@
 .env
+
+# Artifacts of `helm dependency update` (CI regenerates them on publish)
+helm/charts/
+helm/Chart.lock
