@@ -25,7 +25,7 @@ export default defineConfig({
         // web-app-serve placeholder override; consumers coerce it with Number()
         APP_SENTRY_TRACES_SAMPLE_RATE: Schema.string.optional(),
         APP_ENVIRONMENT: (key: string, value: string) => {
-            const regex = /^(PROD|STAGE|testing|ci|alpha-\d+|ALPHA-\d+|DEV)$/;
+            const regex = /^(PROD|STAGE|testing|ci|alpha-\d+|ALPHA-\d+|SANDBOX-\d+|DEV)$/;
             const valid = !!value && (value.match(regex) !== null);
             if (!valid) {
                 throw new Error(`Value for environment variable "${key}" must match regex "${regex}", instead received "${value}"`);
