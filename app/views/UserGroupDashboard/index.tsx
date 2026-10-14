@@ -36,7 +36,7 @@ import StatsBoard from '#views/StatsBoard';
 
 import styles from './styles.module.css';
 
-const EXPORT_LIMIT = 500;
+const EXPORT_LIMIT = 100;
 
 const USER_GROUP_STATS = gql`
 query UserGroupStats($pk: ID!, $limit: Int!, $offset: Int!) {
@@ -192,7 +192,6 @@ function UserGroupDashboard(props: Props) {
 
     const [activePage, setActivePage] = React.useState(1);
     const [pagePerItem, setPagePerItem] = React.useState(10);
-    const [offset, setOffset] = useState<number>(EXPORT_LIMIT);
 
     const {
         data: userGroupStats,
@@ -227,20 +226,22 @@ function UserGroupDashboard(props: Props) {
                 const result = response?.contributorUserGroup?.userMemberships;
                 // eslint-disable-next-line max-len
                 const userMembershipsCount = response?.contributorUserGroup?.userMemberships?.totalCount ?? 0;
-                const newUserMembershipsData = [...userMembershipsData, ...(result?.results ?? [])];
+                const pageResults = result?.results ?? [];
+                const newUserMembershipsData = [...userMembershipsData, ...pageResults];
+                const hasMore = pageResults.length > 0
+                    && newUserMembershipsData.length < userMembershipsCount;
 
-                if (newUserMembershipsData?.length < userMembershipsCount) {
+                if (hasMore) {
                     setExportPending(true);
+                    setUserMembershipsData(newUserMembershipsData);
                     exportUserMembership({
                         variables: userGroupId ? ({
                             pk: userGroupId,
                             limit: EXPORT_LIMIT,
-                            offset,
+                            offset: newUserMembershipsData.length,
                         }) : undefined,
                     });
-                }
-
-                if (newUserMembershipsData.length === userMembershipsCount) {
+                } else {
                     const userGroupData = [
                         ['User', 'Total swipes', 'Project contributed', 'Time spent(mins)'],
                         ...(newUserMembershipsData?.map((user) => (
@@ -273,9 +274,8 @@ function UserGroupDashboard(props: Props) {
                     document.body.removeChild(link);
                     window.URL.revokeObjectURL(objUrl);
                     setExportPending(false);
+                    setUserMembershipsData([]);
                 }
-                setOffset((prevValue) => prevValue + EXPORT_LIMIT);
-                setUserMembershipsData(() => newUserMembershipsData);
             },
             onError: (err) => {
                 // NOTE: we don't show any alert on failure and success for now
