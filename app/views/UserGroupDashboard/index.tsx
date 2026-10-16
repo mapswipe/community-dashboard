@@ -281,9 +281,17 @@ function UserGroupDashboard(props: Props) {
                 // NOTE: we don't show any alert on failure and success for now
                 // eslint-disable-next-line no-console
                 console.log('some error ocoured', err);
+                setExportPending(false);
+                setUserMembershipsData([]);
             },
         },
     );
+
+    const handleExportClick = useCallback(() => {
+        setUserMembershipsData([]);
+        setExportPending(true);
+        exportUserMembership({ variables: userGroupExportVariable });
+    }, [exportUserMembership, userGroupExportVariable]);
 
     const {
         data: filteredUserGroupStats,
@@ -369,7 +377,7 @@ function UserGroupDashboard(props: Props) {
                         </Heading>
                         <Button
                             disabled={exportPending}
-                            onClick={exportUserMembership}
+                            onClick={handleExportClick}
                             name={undefined}
                         >
                             { exportPending ? 'Exporting' : 'Export' }
