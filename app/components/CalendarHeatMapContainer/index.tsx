@@ -59,11 +59,15 @@ function getDateRange(data: ReactCalendarHeatmapValue<string>[] | null | undefin
 
 interface Props {
     data: ReactCalendarHeatmapValue<string>[] | undefined | null;
+    unit: string;
+    actions?: React.ReactNode;
 }
 
 function CalendarHeatMapContainer(props: Props) {
     const {
         data,
+        unit,
+        actions,
     } = props;
 
     const range = useMemo(() => (getDateRange(data)), [data]);
@@ -96,6 +100,7 @@ function CalendarHeatMapContainer(props: Props) {
             variant="stat"
             className={styles.chartContainer}
             contentClassName={styles.content}
+            actions={actions}
         >
             <div className={styles.calendar}>
                 <CalendarHeatmap
@@ -107,7 +112,7 @@ function CalendarHeatMapContainer(props: Props) {
                     tooltipDataAttrs={(value) => {
                         const val = value as { date?: string, count?: string };
                         if (val?.count && val?.date) {
-                            return { 'data-tip': `${val?.count} swipes on ${val?.date}` } as TooltipDataAttrs;
+                            return { 'data-tip': `${val?.count} ${unit} on ${val?.date}` } as TooltipDataAttrs;
                         }
                         return {};
                     }}
