@@ -107,6 +107,10 @@ const FILTERED_USER_GROUP_STATS = gql`
                     totalSwipeTime
                     date
                 }
+                contributorsByDate {
+                    taskDate
+                    totalContributors
+                }
             }
         }
     }
@@ -361,6 +365,7 @@ function UserGroupDashboard(props: Props) {
                     heading="Group Statsboard"
                     contributionSwipeStats={filteredStats?.swipeByDate}
                     contributionTimeStats={filteredStats?.swipeTimeByDate}
+                    contributorCountStats={filteredStats?.contributorsByDate ?? []}
                     areaSwipedByProjectType={filteredStats?.areaSwipedByProjectType}
                     organizationTypeStats={filteredStats?.swipeByOrganizationName}
                     swipeByProjectType={filteredStats?.swipeByProjectType}

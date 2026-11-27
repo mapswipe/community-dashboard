@@ -39,6 +39,7 @@ import NumberOutput from '#components/NumberOutput';
 import SegmentInput from '#components/SegmentInput';
 import TextOutput from '#components/TextOutput';
 import {
+    ContributorCountStatType,
     ContributorSwipeStatType,
     ContributorTimeStatType,
     OrganizationSwipeStatsType,
@@ -132,6 +133,26 @@ function formatTimeDuration(value: number) {
 }
 */
 
+type HeatmapMetric = 'swipes' | 'contributors';
+
+interface HeatmapMetricOption {
+    value: HeatmapMetric;
+    label: string;
+}
+
+const heatmapMetricOptions: HeatmapMetricOption[] = [
+    { value: 'swipes', label: 'Swipes' },
+    { value: 'contributors', label: 'Contributors' },
+];
+
+function heatmapMetricKeySelector(option: HeatmapMetricOption) {
+    return option.value;
+}
+
+function heatmapMetricLabelSelector(option: HeatmapMetricOption) {
+    return option.label;
+}
+
 // Swipes by organization
 
 function organizationNameFormatter(value: string) {
@@ -202,6 +223,7 @@ interface Props {
     heading?: string;
     contributionTimeStats: ActualContributorTimeStatType[] | null | undefined;
     contributionSwipeStats?: ContributorSwipeStatType[] | null | undefined;
+    contributorCountStats?: ContributorCountStatType[] | null | undefined;
     areaSwipedByProjectType: ProjectTypeAreaStatsType[] | null | undefined;
     organizationTypeStats: OrganizationSwipeStatsType[] | null | undefined;
     swipeByProjectType: ProjectTypeSwipeStatsType[] | null | undefined;
@@ -217,6 +239,7 @@ function StatsBoard(props: Props) {
         heading,
         contributionTimeStats,
         contributionSwipeStats,
+        contributorCountStats,
         areaSwipedByProjectType,
         organizationTypeStats,
         swipeByProjectType,
@@ -229,6 +252,7 @@ function StatsBoard(props: Props) {
     const { width: documentWidth } = useDocumentSize();
 
     const [resolution, setResolution] = React.useState<'year' | 'month' | 'day'>('day');
+    const [heatmapMetric, setHeatmapMetric] = React.useState<HeatmapMetric>('swipes');
 
     // Timeseries
     React.useEffect(
@@ -274,13 +298,24 @@ function StatsBoard(props: Props) {
             ? formatMonth
             : formatYear;
 
-    const contributionData = useMemo(
+    const swipeHeatmapData = useMemo(
         () => (
             contributionSwipeStats
-                ?.map((value) => ({ date: value.taskDate, count: value.totalSwipes }))
+                ?.map((item) => ({ date: item.taskDate, count: item.totalSwipes }))
         ),
         [contributionSwipeStats],
     );
+
+    const contributorHeatmapData = useMemo(
+        () => (
+            contributorCountStats
+                ?.map((item) => ({ date: item.taskDate, count: item.totalContributors }))
+        ),
+        [contributorCountStats],
+    );
+
+    const contributorHeatmapAvailable = isDefined(contributorCountStats);
+    const showContributorHeatmap = contributorHeatmapAvailable && heatmapMetric === 'contributors';
 
     const contributionTimeSeries = useMemo(
         () => {
@@ -516,7 +551,19 @@ function StatsBoard(props: Props) {
             <div className={styles.board}>
                 {!calendarHeatmapHidden && (
                     <CalendarHeatMapContainer
-                        data={contributionData}
+                        data={showContributorHeatmap ? contributorHeatmapData : swipeHeatmapData}
+                        unit={showContributorHeatmap ? 'contributors' : 'swipes'}
+                        actions={contributorHeatmapAvailable && (
+                            <SegmentInput
+                                className={styles.resolutionInput}
+                                name="heatmap-metric"
+                                options={heatmapMetricOptions}
+                                keySelector={heatmapMetricKeySelector}
+                                labelSelector={heatmapMetricLabelSelector}
+                                value={heatmapMetric}
+                                onChange={setHeatmapMetric}
+                            />
+                        )}
                     />
                 )}
                 <InformationCard
